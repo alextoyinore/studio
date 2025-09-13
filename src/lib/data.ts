@@ -1,4 +1,4 @@
-import type { Destination, Job, Course } from './types';
+import type { Destination, Job, Course, School } from './types';
 import { PlaceHolderImages } from './placeholder-images';
 
 export const destinations: Destination[] = [
@@ -149,5 +149,97 @@ export const courses: Course[] = [
     description: 'Explore the Great Barrier Reef and learn about marine conservation efforts in this hands-on course.',
     travelType: ['student'],
     enrollUrl: '#',
+  },
+];
+
+export const schools: School[] = [
+  {
+    id: 'paris-language-school',
+    name: 'Paris Language School',
+    location: 'Paris, France',
+    country: 'France',
+    description: 'Immerse yourself in the French language and culture at our school located in the heart of Paris. We offer a variety of courses for all levels.',
+    image: PlaceHolderImages.find(img => img.id === 'school-paris')!,
+    courses: [
+        {
+            id: 'course-1',
+            title: 'French Language Immersion',
+            institution: 'Paris Language School',
+            location: 'Paris, France',
+            duration: '4 Weeks',
+            description: 'An intensive course for beginners to learn French while living in Paris. Cultural activities included.',
+            travelType: ['student', 'vacation'],
+            enrollUrl: '#',
+        },
+    ],
+  },
+    {
+    id: 'nyc-business-school',
+    name: 'NYC Business School',
+    location: 'New York, USA',
+    country: 'USA',
+    description: 'Gain a competitive edge in the business world with our industry-focused programs in the financial capital of the world.',
+    image: PlaceHolderImages.find(img => img.id === 'school-ny')!,
+    courses: [
+        {
+            id: 'course-3',
+            title: 'Digital Marketing Bootcamp',
+            institution: 'NYC Business School',
+            location: 'New York, USA',
+            duration: '12 Weeks',
+            description: 'A comprehensive program covering SEO, SEM, social media marketing, and analytics. Prepares you for a career in tech.',
+            travelType: ['student', 'work'],
+            enrollUrl: '#',
+        },
+    ],
+  },
+  {
+    id: 'tokyo-culinary-arts',
+    name: 'Tokyo Culinary Arts',
+    location: 'Tokyo, Japan',
+    country: 'Japan',
+    description: 'Master the art of Japanese cooking, from traditional techniques to modern gastronomy, in vibrant Tokyo.',
+    image: PlaceHolderImages.find(img => img.id === 'school-tokyo')!,
+    courses: [
+        {
+            id: 'course-2',
+            title: 'Introduction to Japanese Cuisine',
+            institution: 'Tokyo Culinary Arts',
+            location: 'Tokyo, Japan',
+            duration: '2 Weeks',
+            description: 'Learn the art of sushi, ramen, and more from master chefs in the culinary capital of the world.',
+            travelType: ['student', 'vacation'],
+            enrollUrl: '#',
+        }
+    ],
+  },
+  {
+    id: 'toronto-film-school',
+    name: 'Toronto Film School',
+    location: 'Toronto, Canada',
+    country: 'Canada',
+    description: 'Launch your career in the film industry with our hands-on programs in one of North America\'s biggest film hubs.',
+    image: PlaceHolderImages.find(img => img.id === 'school-toronto')!,
+    courses: [],
+  },
+  {
+    id: 'sydney-marine-institute',
+    name: 'Sydney Marine Institute',
+    location: 'Sydney, Australia',
+    country: 'Australia',
+    description: 'Study marine biology and conservation with direct access to Australia\'s unique marine ecosystems.',
+    image: PlaceHolderImages.find(img => img.id === 'school-sydney')!,
+    courses: [
+        {
+            id: 'course-4',
+            title: 'Marine Biology Field Study',
+            institution: 'Sydney Marine Institute',
+            location: 'Sydney, Australia',
+            duration: '6 Weeks',
+            description: 'Explore the Great Barrier Reef and learn about marine conservation efforts in this hands-on course.',
+            travelType: ['student'],
+            enrollUrl: '#',
+        }
+    ],
   },
 ];

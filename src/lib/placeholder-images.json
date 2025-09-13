@@ -1,3 +1,4 @@
+
 {
   "placeholderImages": [
     {
@@ -35,6 +36,36 @@
       "description": "The Pyramids of Giza near Cairo, Egypt.",
       "imageUrl": "https://picsum.photos/seed/6/600/400",
       "imageHint": "egypt pyramids"
+    },
+    {
+      "id": "school-paris",
+      "description": "A charming street in Paris with a view of a university building.",
+      "imageUrl": "https://picsum.photos/seed/101/600/400",
+      "imageHint": "paris university"
+    },
+    {
+      "id": "school-ny",
+      "description": "A modern university building in New York City.",
+      "imageUrl": "https://picsum.photos/seed/102/600/400",
+      "imageHint": "new-york university"
+    },
+    {
+      "id": "school-tokyo",
+      "description": "A university campus in Tokyo with cherry blossoms.",
+      "imageUrl": "https://picsum.photos/seed/103/600/400",
+      "imageHint": "tokyo campus"
+    },
+    {
+      "id": "school-toronto",
+      "description": "A university building in Toronto during autumn.",
+      "imageUrl": "https://picsum.photos/seed/104/600/400",
+      "imageHint": "toronto university"
+    },
+    {
+      "id": "school-sydney",
+      "description": "A university campus near the coast in Sydney.",
+      "imageUrl": "https://picsum.photos/seed/105/600/400",
+      "imageHint": "sydney university"
     }
   ]
 }

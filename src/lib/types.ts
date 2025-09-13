@@ -31,3 +31,13 @@ export type Course = {
   travelType: TravelType[];
   enrollUrl: string;
 };
+
+export type School = {
+  id: string;
+  name: string;
+  location: string;
+  country: string;
+  description: string;
+  image: ImagePlaceholder;
+  courses: Course[];
+};
