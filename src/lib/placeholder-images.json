@@ -1,3 +1,40 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "dest-paris",
+      "description": "The Eiffel Tower in Paris, France.",
+      "imageUrl": "https://picsum.photos/seed/1/600/400",
+      "imageHint": "paris eiffel"
+    },
+    {
+      "id": "dest-tokyo",
+      "description": "Shibuya Crossing in Tokyo, Japan.",
+      "imageUrl": "https://picsum.photos/seed/2/600/400",
+      "imageHint": "tokyo street"
+    },
+    {
+      "id": "dest-sydney",
+      "description": "The Sydney Opera House in Sydney, Australia.",
+      "imageUrl": "https://picsum.photos/seed/3/600/400",
+      "imageHint": "sydney opera"
+    },
+    {
+      "id": "dest-new-york",
+      "description": "Times Square in New York City, USA.",
+      "imageUrl": "https://picsum.photos/seed/4/600/400",
+      "imageHint": "new-york city"
+    },
+    {
+      "id": "dest-rome",
+      "description": "The Colosseum in Rome, Italy.",
+      "imageUrl": "https://picsum.photos/seed/5/600/400",
+      "imageHint": "rome colosseum"
+    },
+    {
+      "id": "dest-cairo",
+      "description": "The Pyramids of Giza near Cairo, Egypt.",
+      "imageUrl": "https://picsum.photos/seed/6/600/400",
+      "imageHint": "egypt pyramids"
+    }
+  ]
 }
