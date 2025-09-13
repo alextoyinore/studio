@@ -6,8 +6,8 @@ import { Footer } from '@/components/layout/Footer';
 import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
-  title: 'Oceanic Journeys',
-  description: 'Explore destinations, find jobs, and take courses with Oceanic Journeys.',
+  title: 'Oceanic Travels',
+  description: 'Explore destinations, find jobs, and take courses with Oceanic Travels.',
 };
 
 export default function RootLayout({

@@ -23,7 +23,7 @@ export function Header() {
         <Link href="/" className="flex items-center gap-2">
           <Waves className="h-6 w-6 text-primary" />
           <span className="font-headline text-xl font-bold tracking-tight">
-            Oceanic Journeys
+            Oceanic Travels
           </span>
         </Link>
 
