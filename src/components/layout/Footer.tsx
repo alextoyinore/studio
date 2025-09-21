@@ -1,14 +1,32 @@
+import Link from 'next/link';
 import React from 'react';
+
+const footerLinks = [
+    { href: '/about', label: 'About' },
+    { href: '/contact', label: 'Contact' },
+    { href: '/privacy', label: 'Privacy Policy' },
+    { href: '/terms', label: 'Terms of Service' },
+    { href: '/cookies', label: 'Cookie Policy' },
+];
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-muted/50">
-      <div className="container mx-auto px-4 py-6 text-center text-muted-foreground">
-        <p className="text-sm">
-          &copy; {currentYear} Oceanic Travels. All rights reserved.
-        </p>
+    <footer className="bg-muted/50 border-t">
+      <div className="container mx-auto px-4 py-8">
+        <div className="flex flex-col md:flex-row justify-between items-center text-center md:text-left gap-4">
+            <p className="text-sm text-muted-foreground">
+            &copy; {currentYear} Oceanic Travels. All rights reserved.
+            </p>
+            <nav className="flex flex-wrap justify-center gap-4 md:gap-6">
+                {footerLinks.map(link => (
+                    <Link key={link.href} href={link.href} className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                        {link.label}
+                    </Link>
+                ))}
+            </nav>
+        </div>
       </div>
     </footer>
   );
