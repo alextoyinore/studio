@@ -11,12 +11,12 @@ export default function TermsOfServicePage() {
 
         <h2>1. Acceptance of Terms</h2>
         <p>
-          By accessing or using the services provided by Oceanic Travels, you agree to be bound by these Terms of Service. If you do not agree to these terms, you may not use our services.
+          By accessing or using the services provided by Oceanic Agency, you agree to be bound by these Terms of Service. If you do not agree to these terms, you may not use our services.
         </p>
         
         <h2>2. Description of Service</h2>
         <p>
-          Oceanic Travels provides a platform for users to find job listings, educational courses, and travel destinations. We do not own or operate these third-party services and are not responsible for their quality or safety.
+          Oceanic Agency provides a platform for users to find job listings, educational courses, and travel destinations. We do not own or operate these third-party services and are not responsible for their quality or safety.
         </p>
         
         <h2>3. User Conduct</h2>
@@ -31,7 +31,7 @@ export default function TermsOfServicePage() {
 
         <h2>5. Limitation of Liability</h2>
         <p>
-          In no event shall Oceanic Travels be liable for any indirect, incidental, special, or consequential damages arising out of or in connection with your use of the service.
+          In no event shall Oceanic Agency be liable for any indirect, incidental, special, or consequential damages arising out of or in connection with your use of the service.
         </p>
         
         <p className="text-sm text-muted-foreground mt-12">

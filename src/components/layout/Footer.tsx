@@ -18,7 +18,7 @@ export function Footer() {
       <div className="container mx-auto px-4 py-8">
         <div className="flex flex-col md:flex-row justify-between items-center text-center md:text-left gap-4">
             <p className="text-sm text-muted-foreground">
-            &copy; {currentYear} Oceanic Travels. All rights reserved.
+            &copy; {currentYear} Oceanic Agency. All rights reserved.
             </p>
             <nav className="flex flex-wrap justify-center gap-4 md:gap-6">
                 {footerLinks.map(link => (

@@ -37,7 +37,7 @@ export default function PrivacyPolicyPage() {
 
         <h2>5. Contact Us</h2>
         <p>
-          If you have any questions about this Privacy Policy, please contact us at privacy@oceanictravels.com.
+          If you have any questions about this Privacy Policy, please contact us at privacy@oceanicagency.com.
         </p>
         
         <p className="text-sm text-muted-foreground mt-12">

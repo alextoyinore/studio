@@ -6,7 +6,7 @@ export default function AboutPage() {
       <div className="max-w-4xl mx-auto">
         <section className="mb-12 text-center">
           <h1 className="font-headline text-4xl md:text-5xl font-bold mb-4 tracking-tight">
-            About Oceanic Travels
+            About Oceanic Agency
           </h1>
           <p className="text-lg md:text-xl text-muted-foreground">
             Your passport to a world of adventure, opportunity, and learning.
@@ -17,7 +17,7 @@ export default function AboutPage() {
             <div className="relative h-80 w-full rounded-lg overflow-hidden shadow-lg">
                  <Image
                     src="https://picsum.photos/seed/106/1200/400"
-                    alt="Team of Oceanic Travels"
+                    alt="Team of Oceanic Agency"
                     fill
                     data-ai-hint="team collaboration"
                     className="object-cover"
@@ -29,7 +29,7 @@ export default function AboutPage() {
             </div>
              <div className="mt-6 text-foreground/90 space-y-4">
                 <p>
-                At Oceanic Travels, we believe that travel is more than just visiting new places; it's about experiencing the world in a meaningful way. Our mission is to connect adventurous souls with opportunities that enrich their lives, whether it's through a dream job in a foreign land, a course that expands their horizons, or a journey to a breathtaking destination.
+                At Oceanic Agency, we believe that travel is more than just visiting new places; it's about experiencing the world in a meaningful way. Our mission is to connect adventurous souls with opportunities that enrich their lives, whether it's through a dream job in a foreign land, a course that expands their horizons, or a journey to a breathtaking destination.
                 </p>
                 <p>
                 We were founded on the principle that everyone deserves the chance to explore their potential, and we are dedicated to making that a reality. By curating a selection of unique jobs, courses, and destinations, we empower our users to design a life they love, filled with discovery and personal growth.
