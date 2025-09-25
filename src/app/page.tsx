@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 
 export default function Home() {
+  const featuredDestinations = destinations.slice(0, 6);
   return (
     <div className="container mx-auto px-4 py-8 md:py-16">
       <section className="text-center mb-16">
@@ -26,7 +27,7 @@ export default function Home() {
       <section>
         <h2 className="font-headline text-3xl md:text-4xl font-bold mb-8 text-center">Featured Destinations</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {destinations.map((destination) => (
+          {featuredDestinations.map((destination) => (
             <DestinationCard key={destination.id} destination={destination} />
           ))}
         </div>

@@ -30,6 +30,13 @@ export const destinations: Destination[] = [
     image: PlaceHolderImages.find(img => img.id === 'dest-uk')!,
     attractions: ['London', 'Scottish Highlands', 'Stonehenge'],
   },
+  {
+    id: 'canada',
+    name: 'Canada',
+    description: 'A vast country of breathtaking landscapes, from soaring mountains to sprawling forests and vibrant cities.',
+    image: PlaceHolderImages.find(img => img.id === 'dest-canada')!,
+    attractions: ['Banff National Park', 'Toronto', 'Niagara Falls'],
+  },
 ];
 
 export const jobs: Job[] = [

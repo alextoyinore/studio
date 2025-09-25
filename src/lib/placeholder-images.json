@@ -25,6 +25,12 @@
       "imageHint": "london bridge"
     },
     {
+      "id": "dest-canada",
+      "description": "A scenic view of mountains and a lake in Banff National Park, Canada.",
+      "imageUrl": "https://images.unsplash.com/photo-1543312388-142b36357398?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxjYW5hZGElMjBsYW5kc2NhcGV8ZW58MHx8fHwxNzU4ODIzNjM5fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "canada landscape"
+    },
+    {
       "id": "school-paris",
       "description": "A charming street in Paris with a view of a university building.",
       "imageUrl": "https://images.unsplash.com/photo-1660412581401-35c4c869cc0e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxwYXJpcyUyMHVuaXZlcnNpdHl8ZW58MHx8fHwxNzU4ODIzNjM5fDA&ixlib=rb-4.1.0&q=80&w=1080",
