@@ -73,7 +73,7 @@ export function Header() {
               </Button>
             </SheetTrigger>
             <SheetContent side="right">
-              <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
+              <SheetTitle className="sr-only">Navigation</SheetTitle>
               <nav className="flex flex-col gap-6 mt-8">
                 {navLinks.map((link) => (
                   <Link
