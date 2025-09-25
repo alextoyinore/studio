@@ -1,70 +1,57 @@
-
 {
   "placeholderImages": [
     {
-      "id": "dest-paris",
-      "description": "The Eiffel Tower in Paris, France.",
-      "imageUrl": "https://picsum.photos/seed/1/600/400",
-      "imageHint": "paris eiffel"
+      "id": "dest-luxembourg",
+      "description": "A view of Luxembourg City with its historic fortifications.",
+      "imageUrl": "https://images.unsplash.com/photo-1668700884604-17e1fca09eb6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxsdXhlbWJvdXJnJTIwY2l0eXxlbnwwfHx8fDE3NTg4MjM2Mzl8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "luxembourg city"
     },
     {
-      "id": "dest-tokyo",
-      "description": "Shibuya Crossing in Tokyo, Japan.",
-      "imageUrl": "https://picsum.photos/seed/2/600/400",
-      "imageHint": "tokyo street"
+      "id": "dest-italy",
+      "description": "The rolling hills of Tuscany, Italy.",
+      "imageUrl": "https://images.unsplash.com/photo-1658737980934-5868142b06a2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxpdGFseSUyMHR1c2Nhbnl8ZW58MHx8fHwxNzU4ODIzNjQxfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "italy tuscany"
     },
     {
-      "id": "dest-sydney",
-      "description": "The Sydney Opera House in Sydney, Australia.",
-      "imageUrl": "https://picsum.photos/seed/3/600/400",
-      "imageHint": "sydney opera"
+      "id": "dest-romania",
+      "description": "A medieval castle in Transylvania, Romania.",
+      "imageUrl": "https://images.unsplash.com/photo-1670175594898-1ea5ea82524e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxyb21hbmlhJTIwY2FzdGxlfGVufDB8fHx8MTc1ODgyMzYzOXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "romania castle"
     },
     {
-      "id": "dest-new-york",
-      "description": "Times Square in New York City, USA.",
-      "imageUrl": "https://picsum.photos/seed/4/600/400",
-      "imageHint": "new-york city"
-    },
-    {
-      "id": "dest-rome",
-      "description": "The Colosseum in Rome, Italy.",
-      "imageUrl": "https://picsum.photos/seed/5/600/400",
-      "imageHint": "rome colosseum"
-    },
-    {
-      "id": "dest-cairo",
-      "description": "The Pyramids of Giza near Cairo, Egypt.",
-      "imageUrl": "https://picsum.photos/seed/6/600/400",
-      "imageHint": "egypt pyramids"
+      "id": "dest-uk",
+      "description": "The iconic Tower Bridge in London, UK.",
+      "imageUrl": "https://images.unsplash.com/photo-1590083948603-b270aff24cc1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8bG9uZG9uJTIwYnJpZGdlfGVufDB8fHx8MTc1ODc5OTM0Nnww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "london bridge"
     },
     {
       "id": "school-paris",
       "description": "A charming street in Paris with a view of a university building.",
-      "imageUrl": "https://picsum.photos/seed/101/600/400",
+      "imageUrl": "https://images.unsplash.com/photo-1660412581401-35c4c869cc0e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxwYXJpcyUyMHVuaXZlcnNpdHl8ZW58MHx8fHwxNzU4ODIzNjM5fDA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "paris university"
     },
     {
       "id": "school-ny",
       "description": "A modern university building in New York City.",
-      "imageUrl": "https://picsum.photos/seed/102/600/400",
+      "imageUrl": "https://images.unsplash.com/photo-1711157393411-1508c9e61067?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxuZXcteW9yayUyMHVuaXZlcnNpdHl8ZW58MHx8fHwxNzU4ODIzNjM5fDA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "new-york university"
     },
     {
       "id": "school-tokyo",
       "description": "A university campus in Tokyo with cherry blossoms.",
-      "imageUrl": "https://picsum.photos/seed/103/600/400",
+      "imageUrl": "https://images.unsplash.com/photo-1713635632424-e5b0876abe5e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHx0b2t5byUyMGNhbXB1c3xlbnwwfHx8fDE3NTg4MjM2Mzl8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "tokyo campus"
     },
     {
       "id": "school-toronto",
       "description": "A university building in Toronto during autumn.",
-      "imageUrl": "https://picsum.photos/seed/104/600/400",
+      "imageUrl": "https://images.unsplash.com/photo-1724502555871-b4e079027344?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHx0b3JvbnRvJTIwdW5pdmVyc2l0eXxlbnwwfHx8fDE3NTg4MjM2Mzl8MA&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "toronto university"
     },
     {
       "id": "school-sydney",
       "description": "A university campus near the coast in Sydney.",
-      "imageUrl": "https://picsum.photos/seed/105/600/400",
+      "imageUrl": "https://images.unsplash.com/photo-1693872398294-93f419e6475a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxzeWRuZXklMjB1bml2ZXJzaXR5fGVufDB8fHx8MTc1ODgyMzYzOXww&ixlib=rb-4.1.0&q=80&w=1080",
       "imageHint": "sydney university"
     }
   ]
