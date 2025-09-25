@@ -13,7 +13,7 @@ export default function Home() {
           Discover Your Next <AnimatedText />
         </h1>
         <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
-          Explore breathtaking destinations, find unique job opportunities, and expand your horizons with our curated courses. Your adventure starts here.
+          Explore breathtaking destinations, find unique job opportunities, and expand your horizons with our curated schools and courses. Your adventure starts here.
         </p>
         <div className="flex gap-4 justify-center">
           <Button asChild size="lg">
