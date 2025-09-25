@@ -37,6 +37,13 @@ export const destinations: Destination[] = [
     image: PlaceHolderImages.find(img => img.id === 'dest-canada')!,
     attractions: ['Banff National Park', 'Toronto', 'Niagara Falls'],
   },
+  {
+    id: 'netherlands',
+    name: 'Netherlands',
+    description: 'Famous for its flat landscape of canals, tulip fields, windmills, and cycling routes.',
+    image: PlaceHolderImages.find(img => img.id === 'dest-netherlands')!,
+    attractions: ['Amsterdam Canals', 'Keukenhof Gardens', 'Zaanse Schans'],
+  },
 ];
 
 export const jobs: Job[] = [

@@ -31,6 +31,12 @@
       "imageHint": "canada landscape"
     },
     {
+      "id": "dest-netherlands",
+      "description": "Iconic canals of Amsterdam, Netherlands.",
+      "imageUrl": "https://images.unsplash.com/photo-1584315358046-5221972f7e02?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxuZXRoZXJsYW5kcyUyMGFtc3RlcmRhbXxlbnwwfHx8fDE3NTg4MjM2Mzl8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "amsterdam canals"
+    },
+    {
       "id": "school-paris",
       "description": "A charming street in Paris with a view of a university building.",
       "imageUrl": "https://images.unsplash.com/photo-1660412581401-35c4c869cc0e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxwYXJpcyUyMHVuaXZlcnNpdHl8ZW58MHx8fHwxNzU4ODIzNjM5fDA&ixlib=rb-4.1.0&q=80&w=1080",
@@ -57,7 +63,7 @@
     {
       "id": "school-sydney",
       "description": "A university campus near the coast in Sydney.",
-      "imageUrl": "https://images.unsplash.com/photo-1693872398294-93f419e6475a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxzeWRuZXklMjB1bml2ZXJzaXR5fGVufDB8fHx8MTc1ODgyMzYzOXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageUrl": "https://images.unsplash.com/photo-1693872398294-93f419e6475a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxzeWRuZXklMjB1bml2ZXJzaXR5fGVufDB8fHx8MTc1ODgyMzYzOXww&ixlibrb-4.1.0&q=80&w=1080",
       "imageHint": "sydney university"
     }
   ]
