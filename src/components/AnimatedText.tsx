@@ -12,14 +12,14 @@ const words = [
 
 export function AnimatedText() {
   const [index, setIndex] = useState(0);
-  const [isFading, setIsFading] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setIsFading(true);
+      setIsAnimating(true);
       setTimeout(() => {
         setIndex((prevIndex) => (prevIndex + 1) % words.length);
-        setIsFading(false);
+        setIsAnimating(false);
       }, 500);
     }, 2000);
 
@@ -29,8 +29,8 @@ export function AnimatedText() {
   return (
     <span
       className={cn(
-        'inline-block transition-opacity duration-500',
-        isFading ? 'opacity-0' : 'opacity-100',
+        'inline-block transition-all duration-500',
+        isAnimating ? 'opacity-0 -translate-y-4' : 'opacity-100 translate-y-0',
         words[index].className
       )}
     >
