@@ -4,10 +4,10 @@ import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 
 const words = [
-  { text: 'trip', className: 'text-cyan-500' },
-  { text: 'home', className: 'text-green-500' },
-  { text: 'school', className: 'text-purple-500' },
-  { text: 'journey', className: 'text-orange-500' },
+  { text: 'Trip', className: 'text-cyan-500' },
+  { text: 'Home', className: 'text-green-500' },
+  { text: 'School', className: 'text-purple-500' },
+  { text: 'Journey', className: 'text-orange-500' },
 ];
 
 export function AnimatedText() {
