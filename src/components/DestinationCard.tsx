@@ -26,7 +26,7 @@ export function DestinationCard({ destination }: DestinationCardProps) {
       </CardHeader>
       <CardContent className="flex-grow flex flex-col justify-end">
         <Button asChild variant="link" className="p-0 justify-start -ml-1">
-            <Link href="#">Explore {destination.name.split(',')[0]}</Link>
+            <Link href={`/destinations/${destination.id}`}>Explore {destination.name.split(',')[0]}</Link>
         </Button>
       </CardContent>
     </Card>
