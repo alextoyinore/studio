@@ -57,22 +57,8 @@ export default function Home() {
 
       <section className="mb-16">
         <h2 className="font-headline text-3xl md:text-4xl font-bold mb-8 text-center">What We Do</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {services.slice(0, 3).map((service, index) => (
-            <Card key={index} className="bg-card/80 border-border/60 hover:shadow-xl hover:-translate-y-2 transition-transform duration-300">
-              <CardHeader className="items-center text-center">
-                <div className="p-4 bg-accent/20 rounded-full mb-4">
-                    <service.icon className="h-8 w-8 text-accent" />
-                </div>
-                <CardTitle className="font-headline text-xl">{service.title}</CardTitle>
-              </CardHeader>
-              <CardContent className="text-center text-muted-foreground">
-                <p>{service.description}</p>
-              </CardContent>
-            </Card>
-          ))}
-           <div className="md:col-span-2 lg:col-span-1" />
-            {services.slice(3, 5).map((service, index) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-start justify-center">
+          {services.map((service, index) => (
             <Card key={index} className="bg-card/80 border-border/60 hover:shadow-xl hover:-translate-y-2 transition-transform duration-300">
               <CardHeader className="items-center text-center">
                 <div className="p-4 bg-accent/20 rounded-full mb-4">
