@@ -41,3 +41,12 @@ export type School = {
   image: ImagePlaceholder;
   courses: Course[];
 };
+
+export type ContactSubmission = {
+  id: string;
+  created_at: string;
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+};

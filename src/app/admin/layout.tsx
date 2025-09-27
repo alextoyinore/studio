@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { SidebarProvider, Sidebar, SidebarHeader, SidebarContent, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarFooter } from '@/components/ui/sidebar';
-import { Home, Map, School, Briefcase, Pencil, Settings, User, ArrowLeft } from 'lucide-react';
+import { Home, Map, School, Briefcase, Pencil, Settings, User, ArrowLeft, Mail } from 'lucide-react';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
@@ -15,6 +15,7 @@ const adminNavItems = [
     { href: '/admin/schools', label: 'Schools', icon: School },
     { href: '/admin/jobs', label: 'Jobs', icon: Briefcase },
     { href: '/admin/blog', label: 'Blog', icon: Pencil },
+    { href: '/admin/contacts', label: 'Contacts', icon: Mail },
     { href: '/admin/settings', label: 'Settings', icon: Settings },
 ];
 
@@ -32,7 +33,7 @@ export default function AdminLayout({
 
   return (
       <SidebarProvider>
-        <div className="flex h-screen w-full">
+        <div className="flex h-screen bg-background">
             <Sidebar>
                 <SidebarHeader>
                     <h2 className="text-xl font-bold p-2">Admin Panel</h2>

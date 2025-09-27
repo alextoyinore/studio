@@ -1,6 +1,7 @@
 "use server";
 
 import * as z from "zod";
+import { createClient } from "@/lib/supabase/server";
 
 const formSchema = z.object({
   name: z.string().min(2),
@@ -18,13 +19,18 @@ export async function submitContactForm(data: ContactFormInput) {
     return { success: false, message: "Invalid data provided." };
   }
 
-  // In a real application, you would save this data to a database,
-  // send an email, or trigger a workflow.
-  // For now, we'll just log it to the console.
-  console.log("New contact form submission:", parsedData.data);
+  const supabase = createClient();
 
-  // Simulate a network delay
-  await new Promise(resolve => setTimeout(resolve, 1000));
+  const { error } = await supabase.from("contacts").insert([parsedData.data]);
+
+  if (error) {
+    console.error("Error saving contact form submission:", error);
+    return {
+      success: false,
+      message: "There was an error saving your message. Please try again.",
+    };
+  }
+
 
   return { success: true, message: "Form submitted successfully." };
 }
