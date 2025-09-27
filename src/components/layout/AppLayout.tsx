@@ -9,16 +9,20 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const isAdmin = pathname.startsWith('/admin');
   const isLogin = pathname === '/login';
+  
+  if (isAdmin || isLogin) {
+    return <main className="flex-grow">{children}</main>;
+  }
 
   return (
     <div className="flex flex-col min-h-screen bg-background">
-      {!isAdmin && !isLogin && <Header />}
+      <Header />
       <main className="flex-grow">
-        <div className={cn({ "w-full lg:w-3/4 lg:mx-auto": !isAdmin && !isLogin })}>
+        <div className="container mx-auto px-4">
             {children}
         </div>
       </main>
-      {!isAdmin && !isLogin && <Footer />}
+      <Footer />
     </div>
   );
 }
