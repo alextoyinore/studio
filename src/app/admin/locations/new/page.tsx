@@ -71,7 +71,7 @@ export default function AddLocationPage() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto">
+    <div>
       <div className="flex items-center gap-4 mb-6">
         <Button asChild variant="outline" size="icon">
             <Link href="/admin/locations">
