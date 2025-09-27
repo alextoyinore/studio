@@ -32,28 +32,30 @@ export default function AdminLayout({
 
   return (
       <SidebarProvider>
-        <Sidebar>
-          <SidebarHeader>
-              <h2 className="text-xl font-bold p-2">Admin Panel</h2>
-          </SidebarHeader>
-          <SidebarContent>
-            <SidebarMenu>
-                {adminNavItems.map(item => (
-                    <SidebarMenuItem key={item.href}>
-                        <SidebarMenuButton asChild>
-                            <Link href={item.href}>
-                                <item.icon />
-                                <span>{item.label}</span>
-                            </Link>
-                        </SidebarMenuButton>
-                    </SidebarMenuItem>
-                ))}
-            </SidebarMenu>
-          </SidebarContent>
-        </Sidebar>
-        <main className="flex-1 p-4 md:p-8">
-          {children}
-        </main>
+        <div className="flex h-screen w-full">
+            <Sidebar>
+                <SidebarHeader>
+                    <h2 className="text-xl font-bold p-2">Admin Panel</h2>
+                </SidebarHeader>
+                <SidebarContent>
+                    <SidebarMenu>
+                        {adminNavItems.map(item => (
+                            <SidebarMenuItem key={item.href}>
+                                <SidebarMenuButton asChild>
+                                    <Link href={item.href}>
+                                        <item.icon />
+                                        <span>{item.label}</span>
+                                    </Link>
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
+                        ))}
+                    </SidebarMenu>
+                </SidebarContent>
+            </Sidebar>
+            <main className="flex-1 p-4 md:p-8 overflow-y-auto">
+                {children}
+            </main>
+        </div>
       </SidebarProvider>
   );
 }
