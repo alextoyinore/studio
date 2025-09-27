@@ -1,3 +1,4 @@
+
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
@@ -43,14 +44,29 @@ export async function signup(data: LoginFormInput) {
     const { email, password } = parsedData.data;
     const supabase = createClient();
 
-    const { error } = await supabase.auth.signUp({
+    const { data: authData, error: authError } = await supabase.auth.signUp({
         email,
         password,
     });
 
-    if (error) {
-        return { success: false, message: error.message };
+    if (authError) {
+        return { success: false, message: authError.message };
     }
+
+    if (authData.user) {
+        const { error: profileError } = await supabase
+            .from('profiles')
+            .insert({ id: authData.user.id, role: 'admin' });
+
+        if (profileError) {
+            // This is a tricky state. The user exists in auth, but not in profiles.
+            // For now, we'll log the error and inform the user.
+            // A more robust solution could involve a cleanup function.
+            console.error('Error creating profile:', profileError);
+            return { success: false, message: "Could not create user profile. Please contact support." };
+        }
+    }
+
 
     return { success: true, message: "Check your email for a confirmation link." };
 }
