@@ -15,7 +15,7 @@ export function Footer() {
 
   return (
     <footer className="bg-muted/50 border-t">
-      <div className="container mx-auto px-4 py-8">
+      <div className="w-full lg:w-3/4 mx-auto px-4 py-8">
         <div className="flex flex-col md:flex-row justify-between items-center text-center md:text-left gap-4">
             <p className="text-sm text-muted-foreground">
             &copy; {currentYear} Oceanic Agency. All rights reserved.
