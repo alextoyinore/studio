@@ -1,14 +1,14 @@
+import Image from 'next/image';
 import { cn } from '@/lib/utils';
+import LogoSvg from '@/assets/logo.svg';
 
 export function Logo({ className }: { className?: string }) {
   return (
-    <div
-      className={cn(
-        'flex h-8 w-8 items-center justify-center rounded-full bg-primary font-bold text-primary-foreground',
-        className
-      )}
-    >
-      O
-    </div>
+    <Image
+      src={LogoSvg}
+      alt="Oceanic Agency Logo"
+      className={cn("h-8 w-auto", className)}
+      priority
+    />
   );
 }
