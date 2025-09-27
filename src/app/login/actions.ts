@@ -56,7 +56,7 @@ export async function signup(data: LoginFormInput) {
     if (authData.user) {
         const { error: profileError } = await supabase
             .from('profiles')
-            .insert({ id: authData.user.id, role: 'admin' });
+            .insert({ id: authData.user.id, role: 'customer' });
 
         if (profileError) {
             // This is a tricky state. The user exists in auth, but not in profiles.

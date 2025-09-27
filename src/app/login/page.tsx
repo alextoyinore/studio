@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -77,8 +78,8 @@ export default function LoginPage() {
     <div className="flex min-h-screen items-center justify-center bg-muted/40">
       <Card className="w-full max-w-sm">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl font-bold">{isSignUp ? "Create Account" : "Admin Login"}</CardTitle>
-          <CardDescription>{isSignUp ? "Enter your details to create a new account." : "Enter your credentials to access the dashboard."}</CardDescription>
+          <CardTitle className="text-2xl font-bold">{isSignUp ? "Create Account" : "Login"}</CardTitle>
+          <CardDescription>{isSignUp ? "Enter your details to create a new account." : "Enter your credentials to access your account."}</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
