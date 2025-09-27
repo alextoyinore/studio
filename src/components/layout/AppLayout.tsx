@@ -11,7 +11,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   const isLogin = pathname === '/login';
 
   return (
-    <div className={cn("flex flex-col min-h-screen", { 'bg-background': !isAdmin })}>
+    <div className="flex flex-col min-h-screen bg-background">
       {!isAdmin && !isLogin && <Header />}
       <main className="flex-grow">
         <div className={cn({ "w-full lg:w-3/4 lg:mx-auto": !isAdmin && !isLogin })}>
