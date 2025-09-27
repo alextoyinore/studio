@@ -15,9 +15,9 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
-import { login } from "./actions";
+import { login, signup } from "./actions";
 import { Loader2 } from "lucide-react";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 
 const formSchema = z.object({
   email: z.string().email("Please enter a valid email."),
@@ -29,6 +29,7 @@ type LoginFormValues = z.infer<typeof formSchema>;
 export default function LoginPage() {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSignUp, setIsSignUp] = useState(false);
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(formSchema),
@@ -40,25 +41,44 @@ export default function LoginPage() {
 
   async function onSubmit(values: LoginFormValues) {
     setIsSubmitting(true);
-    const result = await login(values);
-    setIsSubmitting(false);
-
-    if (result?.success === false) {
-      toast({
-        variant: "destructive",
-        title: "Login Failed",
-        description: result.message,
-      });
+    
+    if (isSignUp) {
+      const result = await signup(values);
+       if (result.success) {
+        toast({
+            title: "Account Created!",
+            description: result.message,
+        });
+        setIsSignUp(false); // Switch back to login view
+        form.reset();
+      } else {
+        toast({
+            variant: "destructive",
+            title: "Sign Up Failed",
+            description: result.message,
+        });
+      }
+    } else {
+      const result = await login(values);
+      if (result?.success === false) {
+        toast({
+            variant: "destructive",
+            title: "Login Failed",
+            description: result.message,
+        });
+      }
+      // On login success, the action handles the redirect
     }
-    // On success, the action handles the redirect
+
+    setIsSubmitting(false);
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[hsl(0,0%,98%)]">
+    <div className="flex min-h-screen items-center justify-center bg-muted/40">
       <Card className="w-full max-w-sm">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl font-bold">Admin Login</CardTitle>
-          <CardDescription>Enter your credentials to access the dashboard.</CardDescription>
+          <CardTitle className="text-2xl font-bold">{isSignUp ? "Create Account" : "Admin Login"}</CardTitle>
+          <CardDescription>{isSignUp ? "Enter your details to create a new account." : "Enter your credentials to access the dashboard."}</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -93,15 +113,23 @@ export default function LoginPage() {
                 {isSubmitting ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Signing in...
+                    {isSignUp ? "Creating Account..." : "Signing In..."}
                   </>
                 ) : (
-                  "Sign In"
+                  isSignUp ? "Sign Up" : "Sign In"
                 )}
               </Button>
             </form>
           </Form>
         </CardContent>
+        <CardFooter className="flex justify-center text-sm">
+            <p>
+                {isSignUp ? "Already have an account?" : "Don't have an account?"}
+                <Button variant="link" className="p-1" onClick={() => setIsSignUp(!isSignUp)}>
+                    {isSignUp ? "Sign In" : "Sign Up"}
+                </Button>
+            </p>
+        </CardFooter>
       </Card>
     </div>
   );
