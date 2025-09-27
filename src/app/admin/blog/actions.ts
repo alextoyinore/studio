@@ -9,6 +9,9 @@ const formSchema = z.object({
   content: z.string().min(20, "Content must be at least 20 characters."),
   author: z.string().min(2, "Author name must be at least 2 characters."),
   imageUrl: z.string().url("Please enter a valid URL for the image."),
+  excerpt: z.string().min(10, "Excerpt must be at least 10 characters.").max(300, "Excerpt cannot exceed 300 characters."),
+  category: z.string().min(3, "Please select a category."),
+  tags: z.string().optional(),
 });
 
 type BlogPostFormInput = z.infer<typeof formSchema>;
@@ -22,10 +25,11 @@ export async function addBlogPost(data: BlogPostFormInput) {
 
   const supabase = createClient();
   
-  const { title, content, author, imageUrl } = parsedData.data;
+  const { title, content, author, imageUrl, excerpt, category, tags } = parsedData.data;
 
   // Create a slug from the title
   const slug = title.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '');
+  const tagsArray = tags?.split(',').map(tag => tag.trim()).filter(Boolean) || [];
 
   const { error } = await supabase.from("blog_posts").insert([
     {
@@ -34,6 +38,9 @@ export async function addBlogPost(data: BlogPostFormInput) {
       content,
       author,
       image_url: imageUrl,
+      excerpt,
+      category,
+      tags: tagsArray,
     },
   ]);
 
@@ -41,7 +48,7 @@ export async function addBlogPost(data: BlogPostFormInput) {
     console.error("Error saving blog post:", error);
     return {
       success: false,
-      message: "There was an error saving the post. Please check if the 'blog_posts' table exists in your database.",
+      message: "There was an error saving the post. Please check if the 'blog_posts' table exists and has the correct columns (excerpt, category, tags).",
     };
   }
 

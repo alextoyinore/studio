@@ -28,6 +28,9 @@ const formSchema = z.object({
   content: z.string().min(20, "Content must be at least 20 characters."),
   author: z.string().min(2, "Author name must be at least 2 characters."),
   imageUrl: z.string().url("Please enter a valid URL for the cover image."),
+  excerpt: z.string().min(10, "Excerpt must be at least 10 characters.").max(300, "Excerpt cannot exceed 300 characters."),
+  category: z.string().min(3, "Please select a category."),
+  tags: z.string().optional(),
 });
 
 type BlogPostFormValues = z.infer<typeof formSchema>;
@@ -43,6 +46,9 @@ export default function AddBlogPostPage() {
       content: "",
       author: "",
       imageUrl: "",
+      excerpt: "",
+      category: "",
+      tags: "",
     },
   });
 
@@ -94,6 +100,7 @@ export default function AddBlogPostPage() {
                     <FormControl>
                       <Input placeholder="e.g., My Trip to the Mountains" {...field} />
                     </FormControl>
+                    <FormDescription>The slug will be automatically generated from this.</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -113,6 +120,22 @@ export default function AddBlogPostPage() {
               />
               <FormField
                 control={form.control}
+                name="excerpt"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Excerpt</FormLabel>
+                    <FormControl>
+                      <Textarea placeholder="A short summary of the post..." {...field} rows={3} />
+                    </FormControl>
+                     <FormDescription>
+                      A brief summary of the post, used for previews.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
                 name="content"
                 render={({ field }) => (
                   <FormItem>
@@ -122,6 +145,38 @@ export default function AddBlogPostPage() {
                     </FormControl>
                      <FormDescription>
                       The main content of your blog post. You can use Markdown for formatting.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+               <FormField
+                control={form.control}
+                name="category"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Category</FormLabel>
+                    <FormControl>
+                      <Input placeholder="e.g., Travel Guides" {...field} />
+                    </FormControl>
+                    <FormDescription>
+                      The main category for this post.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+               <FormField
+                control={form.control}
+                name="tags"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Tags</FormLabel>
+                    <FormControl>
+                      <Input placeholder="e.g., mountains, hiking, nature" {...field} />
+                    </FormControl>
+                    <FormDescription>
+                      Comma-separated list of tags.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
