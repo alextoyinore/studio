@@ -57,7 +57,7 @@ export default async function AdminLayout({
 
   return (
       <SidebarProvider>
-        <div className="flex h-screen bg-muted/20">
+        <div className="flex h-screen">
             <Sidebar>
                 <SidebarHeader>
                     <h2 className="text-xl font-bold p-2">Admin Panel</h2>
@@ -113,15 +113,13 @@ export default async function AdminLayout({
                     </SidebarMenu>
                 </SidebarFooter>
             </Sidebar>
-            <div className="flex flex-col flex-1">
-                <header className="flex h-14 items-center gap-4 border-b bg-background px-4 md:hidden">
+            <main className="flex-1 w-full p-4 md:p-8 overflow-y-auto">
+                 <header className="flex items-center gap-4 p-4 bg-background border-b md:hidden -mx-4 -mt-4 mb-4 sticky top-0 z-30">
                     <SidebarTrigger />
                     <h1 className="text-lg font-semibold">Admin Dashboard</h1>
                 </header>
-                <main className="flex-1 p-4 md:p-8 overflow-y-auto">
-                    {children}
-                </main>
-            </div>
+                {children}
+            </main>
         </div>
       </SidebarProvider>
   );
