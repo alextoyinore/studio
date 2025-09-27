@@ -27,7 +27,7 @@ export default function AdminLayout({
   const authCookie = cookieStore.get('auth');
 
   if (authCookie?.value !== 'true') {
-    return redirect('/admin/login');
+    return redirect('/login');
   }
 
   return (
