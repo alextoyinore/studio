@@ -10,8 +10,19 @@ export type Destination = {
   attractions: string[];
 };
 
-export type Job = {
+export type Location = {
   id: string;
+  created_at: string;
+  name: string;
+  description: string;
+  image_url: string;
+  image_description: string;
+  image_hint: string;
+  attractions: string[];
+};
+
+export type Job = {
+  id:string;
   title: string;
   company: string;
   location: string;
