@@ -8,16 +8,17 @@ import { cn } from "@/lib/utils";
 export function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const isAdmin = pathname.startsWith('/admin');
+  const isLogin = pathname === '/login';
 
   return (
-    <div className={cn("flex flex-col min-h-screen", { 'bg-white': !isAdmin })}>
-      {!isAdmin && <Header />}
+    <div className={cn("flex flex-col min-h-screen", { 'bg-background': !isAdmin })}>
+      {!isAdmin && !isLogin && <Header />}
       <main className="flex-grow">
-        <div className={cn({ "w-full lg:w-3/4 lg:mx-auto": !isAdmin })}>
+        <div className={cn({ "w-full lg:w-3/4 lg:mx-auto": !isAdmin && !isLogin })}>
             {children}
         </div>
       </main>
-      {!isAdmin && <Footer />}
+      {!isAdmin && !isLogin && <Footer />}
     </div>
   );
 }
