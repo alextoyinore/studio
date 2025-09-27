@@ -1,9 +1,10 @@
 import type { Metadata } from 'next';
-import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { SidebarProvider, Sidebar, SidebarHeader, SidebarContent, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarFooter } from '@/components/ui/sidebar';
 import { Home, Map, School, Briefcase, Pencil, Settings, User, ArrowLeft, Mail } from 'lucide-react';
 import Link from 'next/link';
+import { createClient } from '@/lib/supabase/server';
+import type { User as SupabaseUser } from '@supabase/supabase-js';
 
 export const metadata: Metadata = {
   title: 'Admin Dashboard',
@@ -19,15 +20,20 @@ const adminNavItems = [
     { href: '/admin/settings', label: 'Settings', icon: Settings },
 ];
 
-export default function AdminLayout({
+async function getUser(): Promise<SupabaseUser | null> {
+    const supabase = createClient();
+    const { data } = await supabase.auth.getUser();
+    return data.user;
+}
+
+export default async function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const cookieStore = cookies();
-  const authCookie = cookieStore.get('auth');
+  const user = await getUser();
 
-  if (authCookie?.value !== 'true') {
+  if (!user) {
     return redirect('/login');
   }
 

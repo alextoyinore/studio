@@ -1,12 +1,12 @@
 "use server";
 
-import { cookies } from "next/headers";
+import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import * as z from "zod";
 
 const loginSchema = z.object({
-  username: z.string(),
-  password: z.string(),
+  email: z.string().email(),
+  password: z.string().min(6, "Password must be at least 6 characters."),
 });
 
 type LoginFormInput = z.infer<typeof loginSchema>;
@@ -18,20 +18,45 @@ export async function login(data: LoginFormInput) {
     return { success: false, message: "Invalid data provided." };
   }
 
-  const { username, password } = parsedData.data;
+  const { email, password } = parsedData.data;
+  const supabase = createClient();
 
-  // IMPORTANT: This is a hardcoded password for demonstration purposes.
-  // In a real application, use a secure authentication system.
-  if (username === "admin" && password === "password") {
-    cookies().set("auth", "true", {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      maxAge: 60 * 60 * 24 * 7, // 1 week
-      path: "/",
-    });
-  } else {
-    return { success: false, message: "Invalid username or password." };
+  const { error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  });
+
+  if (error) {
+    return { success: false, message: error.message };
   }
 
   redirect("/admin");
+}
+
+export async function signup(data: LoginFormInput) {
+    const parsedData = loginSchema.safeParse(data);
+
+    if (!parsedData.success) {
+        return { success: false, message: "Invalid data provided." };
+    }
+
+    const { email, password } = parsedData.data;
+    const supabase = createClient();
+
+    const { error } = await supabase.auth.signUp({
+        email,
+        password,
+    });
+
+    if (error) {
+        return { success: false, message: error.message };
+    }
+
+    return { success: true, message: "Check your email for a confirmation link." };
+}
+
+export async function logout() {
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    redirect('/login');
 }
