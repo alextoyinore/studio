@@ -71,7 +71,7 @@ export default function AddLocationPage() {
   }
 
   return (
-    <div>
+    <div className="max-w-4xl mx-auto">
       <div className="flex items-center gap-4 mb-6">
         <Button asChild variant="outline" size="icon">
             <Link href="/admin/locations">
@@ -142,7 +142,7 @@ export default function AddLocationPage() {
                       <Input placeholder="https://images.unsplash.com/..." {...field} />
                     </FormControl>
                      <FormDescription>
-                      Use a high-quality image URL from a service like Unsplash.
+                      Use a high-quality image from a service like Unsplash.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
