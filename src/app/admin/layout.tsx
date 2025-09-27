@@ -48,6 +48,39 @@ export default async function AdminLayout({
     return redirect('/login');
   }
 
+  // Temporary debugging block
+  if (!profile || !['superadmin', 'admin', 'staff'].includes(profile.role)) {
+    return (
+        <div className="w-full min-h-screen bg-background flex items-center justify-center">
+            <div className="bg-card p-8 rounded-lg shadow-lg border max-w-2xl text-card-foreground">
+                <h1 className="text-2xl font-bold mb-4">Authentication Debug</h1>
+                <p className="text-muted-foreground mb-6">You are being redirected. Here is the profile data we found for your user. If "profile" is null, it means no matching record was found in the 'profiles' table for your user ID.</p>
+                <pre className="bg-muted/50 p-4 rounded-md overflow-x-auto text-sm">
+                    <code>
+                        {JSON.stringify({ user, profile }, null, 2)}
+                    </code>
+                </pre>
+                <div className="mt-6">
+                    <p className="font-semibold">User ID:</p>
+                    <p className="text-sm text-muted-foreground break-all">{user?.id}</p>
+                </div>
+                <div className="mt-4">
+                    <p className="font-semibold">Profile Role Found:</p>
+                    <p className="text-sm text-muted-foreground">{profile?.role || 'No role found'}</p>
+                </div>
+                 <div className="mt-6 border-t pt-4 text-sm text-muted-foreground">
+                    <p><strong>Next Steps:</strong></p>
+                    <ol className="list-decimal list-inside mt-2 space-y-1">
+                        <li>Verify the User ID above matches the `id` in your `profiles` table exactly.</li>
+                        <li>Ensure the `role` in your `profiles` table is one of: `superadmin`, `admin`, or `staff`.</li>
+                         <li>Check that you have disabled Row Level Security (RLS) on the `profiles` table for now.</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    );
+  }
+
   const allowedRoles = ['superadmin', 'admin', 'staff'];
   if (!profile || !allowedRoles.includes(profile.role)) {
     return redirect('/');
@@ -55,7 +88,7 @@ export default async function AdminLayout({
 
   return (
       <SidebarProvider>
-        <div className="flex h-screen bg-background">
+        <div className="flex h-screen">
             <Sidebar>
                 <SidebarHeader>
                     <h2 className="text-xl font-bold p-2">Admin Panel</h2>
