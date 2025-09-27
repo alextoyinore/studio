@@ -1,10 +1,12 @@
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { SidebarProvider, Sidebar, SidebarHeader, SidebarContent, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarFooter } from '@/components/ui/sidebar';
-import { Home, Map, School, Briefcase, Pencil, Settings, User, ArrowLeft, Mail } from 'lucide-react';
+import { Home, Map, School, Briefcase, Pencil, Settings, User, ArrowLeft, Mail, LogOut } from 'lucide-react';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
 import type { User as SupabaseUser } from '@supabase/supabase-js';
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
+import { logout } from '@/app/login/actions';
 
 export const metadata: Metadata = {
   title: 'Admin Dashboard',
@@ -84,14 +86,30 @@ export default async function AdminLayout({
                                 </Link>
                             </SidebarMenuButton>
                         </SidebarMenuItem>
-                        <SidebarMenuItem>
-                            <SidebarMenuButton asChild>
-                                <Link href="/admin/settings">
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <SidebarMenuButton>
                                     <User />
                                     <span>{profile.email}</span>
-                                </Link>
-                            </SidebarMenuButton>
-                        </SidebarMenuItem>
+                                </SidebarMenuButton>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent className="w-56 mb-2" side="top" align="start">
+                                <DropdownMenuItem asChild>
+                                     <Link href="/admin/settings">
+                                        <Settings className="mr-2" />
+                                        <span>Settings</span>
+                                    </Link>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem>
+                                     <form action={logout} className="w-full">
+                                        <button type="submit" className="w-full flex items-center">
+                                            <LogOut className="mr-2" />
+                                            <span>Logout</span>
+                                        </button>
+                                    </form>
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
                     </SidebarMenu>
                 </SidebarFooter>
             </Sidebar>
