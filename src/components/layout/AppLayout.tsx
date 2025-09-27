@@ -18,7 +18,7 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
     <div className="flex flex-col min-h-screen bg-background">
       <Header />
       <main className="flex-grow">
-        <div className="w-full lg:w-3/4 mx-auto px-4">
+        <div className="w-full lg:w-3/4 mx-auto">
             {children}
         </div>
       </main>
