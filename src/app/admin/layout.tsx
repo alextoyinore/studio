@@ -20,10 +20,21 @@ const adminNavItems = [
     { href: '/admin/settings', label: 'Settings', icon: Settings },
 ];
 
-async function getUser(): Promise<SupabaseUser | null> {
+async function getUser(): Promise<{ user: SupabaseUser | null, profile: any | null }> {
     const supabase = createClient();
-    const { data } = await supabase.auth.getUser();
-    return data.user;
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) {
+        return { user: null, profile: null };
+    }
+
+    const { data: profile } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', user.id)
+        .single();
+    
+    return { user, profile };
 }
 
 export default async function AdminLayout({
@@ -31,10 +42,15 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const user = await getUser();
+  const { user, profile } = await getUser();
 
   if (!user) {
     return redirect('/login');
+  }
+
+  const allowedRoles = ['superadmin', 'admin', 'staff'];
+  if (!profile || !allowedRoles.includes(profile.role)) {
+    return redirect('/');
   }
 
   return (
@@ -72,7 +88,7 @@ export default async function AdminLayout({
                             <SidebarMenuButton asChild>
                                 <Link href="/admin/settings">
                                     <User />
-                                    <span>Admin Profile</span>
+                                    <span>{profile.email}</span>
                                 </Link>
                             </SidebarMenuButton>
                         </SidebarMenuItem>
