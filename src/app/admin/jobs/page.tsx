@@ -1,15 +1,18 @@
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-react";
+import Link from "next/link";
 
 export default function AdminJobsPage() {
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Manage Jobs</h1>
-        <Button>
-          <PlusCircle className="mr-2" />
-          Post Job
+        <Button asChild>
+          <Link href="/admin/jobs/new">
+            <PlusCircle className="mr-2" />
+            Post Job
+          </Link>
         </Button>
       </div>
       <Card>
