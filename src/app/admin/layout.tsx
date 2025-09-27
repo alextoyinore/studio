@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
-import { SidebarProvider, Sidebar, SidebarHeader, SidebarContent, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarFooter } from '@/components/ui/sidebar';
+import { SidebarProvider, Sidebar, SidebarHeader, SidebarContent, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarFooter, SidebarTrigger } from '@/components/ui/sidebar';
 import { Home, Map, School, Briefcase, Pencil, Settings, User, ArrowLeft, Mail, LogOut } from 'lucide-react';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
@@ -57,7 +57,7 @@ export default async function AdminLayout({
 
   return (
       <SidebarProvider>
-        <div className="flex h-screen">
+        <div className="flex h-screen bg-muted/20">
             <Sidebar>
                 <SidebarHeader>
                     <h2 className="text-xl font-bold p-2">Admin Panel</h2>
@@ -113,9 +113,15 @@ export default async function AdminLayout({
                     </SidebarMenu>
                 </SidebarFooter>
             </Sidebar>
-            <main className="flex-1 p-4 md:p-8 overflow-y-auto">
-                {children}
-            </main>
+            <div className="flex flex-col flex-1">
+                <header className="flex h-14 items-center gap-4 border-b bg-background px-4 md:hidden">
+                    <SidebarTrigger />
+                    <h1 className="text-lg font-semibold">Admin Dashboard</h1>
+                </header>
+                <main className="flex-1 p-4 md:p-8 overflow-y-auto">
+                    {children}
+                </main>
+            </div>
         </div>
       </SidebarProvider>
   );
