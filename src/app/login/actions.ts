@@ -57,7 +57,7 @@ export async function signup(data: LoginFormInput) {
         const { error: profileError } = await supabase.from('profiles').insert({ 
             id: signUpData.user.id, 
             email: signUpData.user.email,
-            role: 'user'
+            role: 'customer'
         });
 
         if (profileError) {
