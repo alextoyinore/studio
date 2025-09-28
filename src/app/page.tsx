@@ -1,5 +1,5 @@
 
-import { destinations, jobs as mockJobs, schools as mockSchools } from '@/lib/data';
+import { destinations } from '@/lib/data';
 import { DestinationCard } from '@/components/DestinationCard';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
@@ -75,19 +75,26 @@ const testimonials = [
 ]
 
 async function getFeaturedData() {
-    // For now, we will use mock data for jobs and schools and only fetch blog posts.
-    // This avoids errors if the tables don't exist yet.
-    // const supabase = createClient();
-    // const blogPromise = supabase.from('blog_posts').select('*').limit(3).order('created_at', { ascending: false });
+    const supabase = createClient();
+    
+    const jobsPromise = supabase.from('jobs').select('*').limit(3).order('created_at', { ascending: false });
+    const schoolsPromise = supabase.from('schools').select('*').limit(3).order('created_at', { ascending: false });
+    const blogPromise = supabase.from('blog_posts').select('*').limit(3).order('created_at', { ascending: false });
 
-    // const [{ data: blogPosts, error: blogError }] = await Promise.all([blogPromise]);
+    const [
+        { data: jobs, error: jobsError },
+        { data: schools, error: schoolsError },
+        { data: blogPosts, error: blogError }
+    ] = await Promise.all([jobsPromise, schoolsPromise, blogPromise]);
 
-    // if(blogError) console.error("Error fetching blog posts:", blogError.message);
+    if(jobsError) console.error("Error fetching jobs:", jobsError.message)
+    if(schoolsError) console.error("Error fetching schools:", schoolsError.message)
+    if(blogError) console.error("Error fetching blog posts:", blogError.message)
 
     return {
-        jobs: (mockJobs.slice(0, 3) || []) as Job[],
-        schools: (mockSchools.slice(0, 3) || []) as SchoolType[],
-        blogPosts: [] as BlogPost[]
+        jobs: (jobs || []) as Job[],
+        schools: (schools || []) as SchoolType[],
+        blogPosts: (blogPosts || []) as BlogPost[]
     }
 }
 
@@ -103,7 +110,7 @@ export default async function Home() {
           Discover Your Next <AnimatedText />
         </h1>
         <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
-          Explore breathtaking destinations, find unique job opportunities, and expand your horizons with our curated schools and courses. Your adventure starts here.
+          Explore breathtaking destinations, find unique job opportunities, and obtain your degree or post-grad with our curated schools applications support. Find job support with our courses. Your adventure starts here.
         </p>
         <div className="flex gap-4 justify-center">
           <Button asChild size="lg">
