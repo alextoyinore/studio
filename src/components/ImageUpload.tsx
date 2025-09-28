@@ -45,9 +45,9 @@ export function ImageUpload({ value, onChange }: ImageUploadProps) {
         });
 
         if (!response.ok) {
-          const errorData = await response.json();
-          console.error("Cloudinary error response:", errorData);
-          throw new Error("Upload failed");
+          const errorText = await response.text();
+          console.error("Cloudinary error response:", errorText);
+          throw new Error("Upload failed. Check console for details.");
         }
 
         const data = await response.json();
@@ -62,7 +62,7 @@ export function ImageUpload({ value, onChange }: ImageUploadProps) {
          toast({
             variant: "destructive",
             title: "Upload Failed",
-            description: "There was a problem uploading your image. Check the console for details.",
+            description: (error as Error).message || "There was a problem uploading your image.",
         });
       } finally {
         setIsUploading(false);
