@@ -3,13 +3,14 @@
 import { createClient } from "@/lib/supabase/server";
 import * as z from "zod";
 import { revalidatePath } from "next/cache";
+import { uploadImage } from "@/lib/cloudinary";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters."),
   location: z.string().min(2, "Location must be at least 2 characters."),
   country: z.string().min(2, "Country must be at least 2 characters."),
   description: z.string().min(10, "Description must be at least 10 characters."),
-  imageUrl: z.string().url("Please enter a valid URL for the image."),
+  imageUrl: z.string().min(1, "Please upload an image."),
   imageDescription: z.string().min(5, "Image description must be at least 5 characters."),
   imageHint: z.string().min(2, "Image hint must be at least 2 characters."),
 });
@@ -23,10 +24,19 @@ export async function addSchool(data: SchoolFormInput) {
     return { success: false, message: "Invalid data provided." };
   }
 
-  const supabase = createClient();
-  
   const { name, location, country, description, imageUrl, imageDescription, imageHint } = parsedData.data;
 
+  let uploadedImageUrl = imageUrl;
+  if (imageUrl.startsWith('data:image')) {
+     try {
+      uploadedImageUrl = await uploadImage(imageUrl, 'schools');
+    } catch (error) {
+      return { success: false, message: 'Failed to upload image.' };
+    }
+  }
+
+  const supabase = createClient();
+  
   // For now, courses will be an empty array.
   // A separate interface would be needed to manage courses for a school.
   const { error } = await supabase.from("schools").insert([
@@ -35,7 +45,7 @@ export async function addSchool(data: SchoolFormInput) {
       location,
       country,
       description,
-      image_url: imageUrl,
+      image_url: uploadedImageUrl,
       image_description: imageDescription,
       image_hint: imageHint,
       courses: [], 

@@ -3,12 +3,13 @@
 import { createClient } from "@/lib/supabase/server";
 import * as z from "zod";
 import { revalidatePath } from "next/cache";
+import { uploadImage } from "@/lib/cloudinary";
 
 const formSchema = z.object({
   title: z.string().min(5, "Title must be at least 5 characters."),
   content: z.string().min(20, "Content must be at least 20 characters."),
   author: z.string().min(2, "Author name must be at least 2 characters."),
-  imageUrl: z.string().url("Please enter a valid URL for the image."),
+  imageUrl: z.string().min(1, "Please upload an image."),
   excerpt: z.string().min(10, "Excerpt must be at least 10 characters.").max(300, "Excerpt cannot exceed 300 characters."),
   category: z.string().min(3, "Please select a category."),
   tags: z.string().optional(),
@@ -23,10 +24,19 @@ export async function addBlogPost(data: BlogPostFormInput) {
     return { success: false, message: "Invalid data provided." };
   }
 
-  const supabase = createClient();
-  
   const { title, content, author, imageUrl, excerpt, category, tags } = parsedData.data;
 
+  let uploadedImageUrl = imageUrl;
+  if (imageUrl.startsWith('data:image')) {
+     try {
+      uploadedImageUrl = await uploadImage(imageUrl, 'blog_posts');
+    } catch (error) {
+      return { success: false, message: 'Failed to upload image.' };
+    }
+  }
+
+  const supabase = createClient();
+  
   // Create a slug from the title
   const slug = title.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '');
   const tagsArray = tags?.split(',').map(tag => tag.trim()).filter(Boolean) || [];
@@ -37,7 +47,7 @@ export async function addBlogPost(data: BlogPostFormInput) {
       slug,
       content,
       author,
-      image_url: imageUrl,
+      image_url: uploadedImageUrl,
       excerpt,
       category,
       tags: tagsArray,

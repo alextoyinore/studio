@@ -3,11 +3,12 @@
 import { createClient } from "@/lib/supabase/server";
 import * as z from "zod";
 import { revalidatePath } from "next/cache";
+import { uploadImage } from "@/lib/cloudinary";
 
 const formSchema = z.object({
   name: z.string().min(2),
   description: z.string().min(10),
-  imageUrl: z.string().url(),
+  imageUrl: z.string().min(1, "Please upload an image."),
   imageDescription: z.string().min(5),
   imageHint: z.string().min(2),
   attractions: z.string().min(3),
@@ -22,10 +23,19 @@ export async function addLocation(data: LocationFormInput) {
     return { success: false, message: "Invalid data provided." };
   }
 
-  const supabase = createClient();
-  
   const { name, description, imageUrl, imageDescription, imageHint, attractions } = parsedData.data;
 
+  let uploadedImageUrl = imageUrl;
+  if (imageUrl.startsWith('data:image')) {
+     try {
+      uploadedImageUrl = await uploadImage(imageUrl, 'locations');
+    } catch (error) {
+      return { success: false, message: 'Failed to upload image.' };
+    }
+  }
+
+  const supabase = createClient();
+  
   // Split attractions string into an array
   const attractionsArray = attractions.split(',').map(item => item.trim()).filter(Boolean);
 
@@ -33,7 +43,7 @@ export async function addLocation(data: LocationFormInput) {
     {
       name,
       description,
-      image_url: imageUrl,
+      image_url: uploadedImageUrl,
       image_description: imageDescription,
       image_hint: imageHint,
       attractions: attractionsArray,

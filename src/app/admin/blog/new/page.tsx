@@ -22,12 +22,13 @@ import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/com
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { addBlogPost } from "../actions";
+import { ImageUpload } from "@/components/ImageUpload";
 
 const formSchema = z.object({
   title: z.string().min(5, "Title must be at least 5 characters."),
   content: z.string().min(20, "Content must be at least 20 characters."),
   author: z.string().min(2, "Author name must be at least 2 characters."),
-  imageUrl: z.string().url("Please enter a valid URL for the cover image."),
+  imageUrl: z.string().min(1, "Please upload an image for the cover."),
   excerpt: z.string().min(10, "Excerpt must be at least 10 characters.").max(300, "Excerpt cannot exceed 300 characters."),
   category: z.string().min(3, "Please select a category."),
   tags: z.string().optional(),
@@ -187,13 +188,9 @@ export default function AddBlogPostPage() {
                 name="imageUrl"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Cover Image URL</FormLabel>
                     <FormControl>
-                      <Input placeholder="https://images.unsplash.com/..." {...field} />
+                      <ImageUpload value={field.value} onChange={field.onChange} />
                     </FormControl>
-                     <FormDescription>
-                      A URL for the post's main image.
-                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}

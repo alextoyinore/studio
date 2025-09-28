@@ -22,13 +22,14 @@ import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/com
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { addSchool } from "../actions";
+import { ImageUpload } from "@/components/ImageUpload";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters."),
   location: z.string().min(2, "Location must be at least 2 characters."),
   country: z.string().min(2, "Country must be at least 2 characters."),
   description: z.string().min(10, "Description must be at least 10 characters."),
-  imageUrl: z.string().url("Please enter a valid URL for the image."),
+  imageUrl: z.string().min(1, "Please upload an image."),
   imageDescription: z.string().min(5, "Image description must be at least 5 characters."),
   imageHint: z.string().min(2, "Image hint must be at least 2 characters."),
 });
@@ -145,18 +146,14 @@ export default function AddSchoolPage() {
                 )}
               />
               <h3 className="text-lg font-medium pt-4 border-t">Image Details</h3>
-              <FormField
+               <FormField
                 control={form.control}
                 name="imageUrl"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Image URL</FormLabel>
                     <FormControl>
-                      <Input placeholder="https://images.unsplash.com/..." {...field} />
+                      <ImageUpload value={field.value} onChange={field.onChange} />
                     </FormControl>
-                     <FormDescription>
-                      Use a high-quality image from a service like Unsplash.
-                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
