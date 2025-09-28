@@ -1,3 +1,4 @@
+
 import { createClient } from "@/lib/supabase/server";
 import type { BlogPost } from "@/lib/types";
 import { BlogCard } from "@/components/BlogCard";

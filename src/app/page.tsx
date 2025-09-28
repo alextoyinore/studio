@@ -1,3 +1,4 @@
+
 import { destinations } from '@/lib/data';
 import { DestinationCard } from '@/components/DestinationCard';
 import { Button } from '@/components/ui/button';
