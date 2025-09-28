@@ -3,7 +3,6 @@
 import { createClient } from "@/lib/supabase/server";
 import * as z from "zod";
 import { revalidatePath } from "next/cache";
-import { uploadImage } from "@/lib/cloudinary";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters."),
@@ -26,15 +25,6 @@ export async function addSchool(data: SchoolFormInput) {
 
   const { name, location, country, description, imageUrl, imageDescription, imageHint } = parsedData.data;
 
-  let uploadedImageUrl = imageUrl;
-  if (imageUrl.startsWith('data:image')) {
-     try {
-      uploadedImageUrl = await uploadImage(imageUrl, 'schools');
-    } catch (error) {
-      return { success: false, message: 'Failed to upload image.' };
-    }
-  }
-
   const supabase = createClient();
   
   // For now, courses will be an empty array.
@@ -45,7 +35,7 @@ export async function addSchool(data: SchoolFormInput) {
       location,
       country,
       description,
-      image_url: uploadedImageUrl,
+      image_url: imageUrl,
       image_description: imageDescription,
       image_hint: imageHint,
       courses: [], 

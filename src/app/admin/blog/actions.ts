@@ -3,7 +3,6 @@
 import { createClient } from "@/lib/supabase/server";
 import * as z from "zod";
 import { revalidatePath } from "next/cache";
-import { uploadImage } from "@/lib/cloudinary";
 
 const formSchema = z.object({
   title: z.string().min(5, "Title must be at least 5 characters."),
@@ -26,15 +25,6 @@ export async function addBlogPost(data: BlogPostFormInput) {
 
   const { title, content, author, imageUrl, excerpt, category, tags } = parsedData.data;
 
-  let uploadedImageUrl = imageUrl;
-  if (imageUrl.startsWith('data:image')) {
-     try {
-      uploadedImageUrl = await uploadImage(imageUrl, 'blog_posts');
-    } catch (error) {
-      return { success: false, message: 'Failed to upload image.' };
-    }
-  }
-
   const supabase = createClient();
   
   // Create a slug from the title
@@ -47,7 +37,7 @@ export async function addBlogPost(data: BlogPostFormInput) {
       slug,
       content,
       author,
-      image_url: uploadedImageUrl,
+      image_url: imageUrl,
       excerpt,
       category,
       tags: tagsArray,

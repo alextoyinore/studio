@@ -5,32 +5,69 @@ import Image from "next/image";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
-import { Upload, X } from "lucide-react";
+import { Upload, X, Loader2 } from "lucide-react";
 import { Button } from "./ui/button";
+import { useToast } from "@/hooks/use-toast";
 
 type ImageUploadProps = {
   value: string;
   onChange: (value: string) => void;
 };
 
-export function ImageUpload({ value, onChange }: ImageUploadProps) {
-  const [preview, setPreview] = useState(value || "");
+const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+export function ImageUpload({ value, onChange }: ImageUploadProps) {
+  const [isUploading, setIsUploading] = useState(false);
+  const { toast } = useToast();
+
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const result = reader.result as string;
-        setPreview(result);
-        onChange(result);
-      };
-      reader.readAsDataURL(file);
+      if (!cloudName || !uploadPreset) {
+        toast({
+            variant: "destructive",
+            title: "Upload not configured",
+            description: "Cloudinary environment variables are not set.",
+        });
+        return;
+      }
+      setIsUploading(true);
+
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", uploadPreset);
+
+      try {
+        const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+          method: "POST",
+          body: formData,
+        });
+
+        if (!response.ok) {
+          throw new Error("Upload failed");
+        }
+
+        const data = await response.json();
+        onChange(data.secure_url);
+         toast({
+            title: "Image Uploaded",
+            description: "Your image has been uploaded successfully.",
+        });
+      } catch (error) {
+        console.error("Error uploading to Cloudinary:", error);
+         toast({
+            variant: "destructive",
+            title: "Upload Failed",
+            description: "There was a problem uploading your image.",
+        });
+      } finally {
+        setIsUploading(false);
+      }
     }
   };
 
   const handleRemoveImage = () => {
-    setPreview("");
     onChange("");
   };
 
@@ -39,10 +76,10 @@ export function ImageUpload({ value, onChange }: ImageUploadProps) {
       <Label>Cover Image</Label>
       <Card>
         <CardContent className="p-4">
-          {preview ? (
+          {value ? (
             <div className="relative group">
               <Image
-                src={preview}
+                src={value}
                 alt="Image preview"
                 width={400}
                 height={200}
@@ -60,16 +97,26 @@ export function ImageUpload({ value, onChange }: ImageUploadProps) {
             </div>
           ) : (
             <div className="flex flex-col items-center justify-center p-8 border-2 border-dashed rounded-md">
-              <Upload className="h-8 w-8 text-muted-foreground mb-2" />
-              <p className="text-sm text-muted-foreground mb-2">
-                Drag & drop or click to upload
-              </p>
-              <Input
-                type="file"
-                accept="image/*"
-                onChange={handleFileChange}
-                className="w-full"
-              />
+                {isUploading ? (
+                    <>
+                        <Loader2 className="h-8 w-8 text-muted-foreground mb-2 animate-spin" />
+                        <p className="text-sm text-muted-foreground">Uploading...</p>
+                    </>
+                ) : (
+                    <>
+                        <Upload className="h-8 w-8 text-muted-foreground mb-2" />
+                        <p className="text-sm text-muted-foreground mb-2">
+                            Drag & drop or click to upload
+                        </p>
+                        <Input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleFileChange}
+                            className="w-full"
+                            disabled={isUploading}
+                        />
+                    </>
+                )}
             </div>
           )}
         </CardContent>
