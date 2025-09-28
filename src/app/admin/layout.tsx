@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
 import type { User as SupabaseUser } from '@supabase/supabase-js';
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from '@/components/ui/dropdown-menu';
-import { logout } from '@/app/login/actions';
+import { LogoutButton } from '@/components/LogoutButton';
 
 export const metadata: Metadata = {
   title: 'Admin Dashboard',
@@ -100,13 +100,8 @@ export default async function AdminLayout({
                                         <span>Settings</span>
                                     </Link>
                                 </DropdownMenuItem>
-                                <DropdownMenuItem asChild>
-                                     <form action={logout}>
-                                        <button type="submit" className="w-full flex items-center">
-                                            <LogOut className="mr-2" />
-                                            <span>Logout</span>
-                                        </button>
-                                    </form>
+                                <DropdownMenuItem>
+                                     <LogoutButton />
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
