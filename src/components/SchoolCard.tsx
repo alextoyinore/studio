@@ -14,9 +14,9 @@ export function SchoolCard({ school }: SchoolCardProps) {
     <Card className="overflow-hidden flex flex-col transition-all hover:shadow-lg hover:-translate-y-1">
         <div className="relative h-48 w-full">
             <Image
-                src={school.image.imageUrl}
-                alt={school.image.description}
-                data-ai-hint={school.image.imageHint}
+                src={school.image_url}
+                alt={school.image_description}
+                data-ai-hint={school.image_hint}
                 fill
                 className="object-cover"
             />
@@ -32,7 +32,7 @@ export function SchoolCard({ school }: SchoolCardProps) {
         <Button asChild className="w-full bg-accent text-accent-foreground hover:bg-accent/90">
           <Link href={`/courses/${school.id}`}>View School</Link>
         </Button>
-         {school.courses.length > 0 && (
+         {school.courses && school.courses.length > 0 && (
           <div className="flex items-center text-sm text-muted-foreground ml-4">
             <BookOpen className="h-4 w-4 mr-2" />
             {school.courses.length} {school.courses.length === 1 ? 'course' : 'courses'}

@@ -4,7 +4,12 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { AnimatedText } from '@/components/AnimatedText';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Plane, Briefcase, HomeIcon, School, FileText } from 'lucide-react';
+import { Plane, Briefcase, HomeIcon, School, FileText, ArrowRight } from 'lucide-react';
+import { createClient } from '@/lib/supabase/server';
+import type { Job, School as SchoolType, BlogPost } from '@/lib/types';
+import { JobCard } from '@/components/JobCard';
+import { SchoolCard } from '@/components/SchoolCard';
+import { BlogCard } from '@/components/BlogCard';
 
 const services = [
   {
@@ -34,10 +39,36 @@ const services = [
   },
 ]
 
-export default function Home() {
-  const featuredDestinations = destinations.slice(0, 6);
+async function getFeaturedData() {
+    const supabase = createClient();
+    const jobsPromise = supabase.from('jobs').select('*').limit(3).order('created_at', { ascending: false });
+    const schoolsPromise = supabase.from('schools').select('*, courses:courses(*)').limit(3).order('created_at', { ascending: false });
+    const blogPromise = supabase.from('blog_posts').select('*').limit(3).order('created_at', { ascending: false });
+    
+    const [
+        { data: jobs, error: jobsError },
+        { data: schools, error: schoolsError },
+        { data: blogPosts, error: blogError }
+    ] = await Promise.all([jobsPromise, schoolsPromise, blogPromise]);
+
+    if(jobsError) console.error("Error fetching jobs:", jobsError.message)
+    if(schoolsError) console.error("Error fetching schools:", schoolsError.message)
+    if(blogError) console.error("Error fetching blog posts:", blogError.message)
+
+    return {
+        jobs: (jobs || []) as Job[],
+        schools: (schools || []) as SchoolType[],
+        blogPosts: (blogPosts || []) as BlogPost[]
+    }
+}
+
+
+export default async function Home() {
+  const featuredDestinations = destinations.slice(0, 3);
+  const { jobs, schools, blogPosts } = await getFeaturedData();
+
   return (
-    <div className="container mx-auto px-4 py-8 md:py-16">
+    <div className="container mx-auto py-8 md:py-16">
       <section className="text-center mb-16">
         <h1 className="font-headline text-4xl md:text-6xl font-bold mb-4 tracking-tight">
           Discover Your Next <AnimatedText />
@@ -74,7 +105,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section>
+      <section className="mb-16">
         <h2 className="font-headline text-3xl md:text-4xl font-bold mb-8 text-center">Featured Destinations</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {featuredDestinations.map((destination) => (
@@ -82,6 +113,49 @@ export default function Home() {
           ))}
         </div>
       </section>
+
+       {jobs.length > 0 && (
+        <section className="mb-16">
+            <div className="flex justify-between items-center mb-8">
+                <h2 className="font-headline text-3xl md:text-4xl font-bold">Featured Jobs</h2>
+                 <Button asChild variant="link">
+                    <Link href="/jobs">View All <ArrowRight className="ml-2"/></Link>
+                </Button>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {jobs.map((job) => <JobCard key={job.id} job={job} />)}
+            </div>
+        </section>
+      )}
+
+      {schools.length > 0 && (
+        <section className="mb-16">
+            <div className="flex justify-between items-center mb-8">
+                <h2 className="font-headline text-3xl md:text-4xl font-bold">Featured Schools</h2>
+                <Button asChild variant="link">
+                    <Link href="/courses">View All <ArrowRight className="ml-2"/></Link>
+                </Button>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {schools.map((school) => <SchoolCard key={school.id} school={school} />)}
+            </div>
+        </section>
+      )}
+
+       {blogPosts.length > 0 && (
+        <section className="mb-16">
+            <div className="flex justify-between items-center mb-8">
+                <h2 className="font-headline text-3xl md:text-4xl font-bold">From Our Blog</h2>
+                <Button asChild variant="link">
+                    <Link href="/blog">Read All <ArrowRight className="ml-2"/></Link>
+                </Button>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {blogPosts.map((post) => <BlogCard key={post.id} post={post} />)}
+            </div>
+        </section>
+      )}
+
     </div>
   );
 }

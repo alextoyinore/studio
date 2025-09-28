@@ -27,14 +27,14 @@ export function JobCard({ job }: JobCardProps) {
         </div>
         <p className="text-sm text-foreground/80 line-clamp-3">{job.description}</p>
         <div className="flex flex-wrap gap-2">
-            {job.travelType.map(type => (
+            {job.travel_type.map(type => (
                 <Badge key={type} variant="secondary">{type}</Badge>
             ))}
         </div>
       </CardContent>
       <CardFooter>
         <Button asChild className="w-full bg-accent text-accent-foreground hover:bg-accent/90">
-          <Link href={job.applyUrl}>Apply Now</Link>
+          <Link href={job.apply_url}>Apply Now</Link>
         </Button>
       </CardFooter>
     </Card>

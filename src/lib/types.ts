@@ -23,13 +23,14 @@ export type Location = {
 
 export type Job = {
   id:string;
+  created_at: string;
   title: string;
   company: string;
   location: string;
   salary: string;
   description: string;
-  travelType: TravelType[];
-  applyUrl: string;
+  travel_type: TravelType[];
+  apply_url: string;
 };
 
 export type Course = {
@@ -45,11 +46,14 @@ export type Course = {
 
 export type School = {
   id: string;
+  created_at: string;
   name: string;
   location: string;
   country: string;
   description: string;
-  image: ImagePlaceholder;
+  image_url: string;
+  image_description: string;
+  image_hint: string;
   courses: Course[];
 };
 
@@ -60,4 +64,17 @@ export type ContactSubmission = {
   email: string;
   subject: string;
   message: string;
+};
+
+export type BlogPost = {
+  id: string;
+  created_at: string;
+  title: string;
+  slug: string;
+  content: string;
+  author: string;
+  image_url: string;
+  excerpt: string;
+  category: string;
+  tags: string[];
 };
