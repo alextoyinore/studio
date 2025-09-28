@@ -100,8 +100,8 @@ export default async function AdminLayout({
                                         <span>Settings</span>
                                     </Link>
                                 </DropdownMenuItem>
-                                <DropdownMenuItem>
-                                     <form action={logout} className="w-full">
+                                <DropdownMenuItem asChild>
+                                     <form action={logout}>
                                         <button type="submit" className="w-full flex items-center">
                                             <LogOut className="mr-2" />
                                             <span>Logout</span>
