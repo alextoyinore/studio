@@ -1,5 +1,5 @@
 
-import { schools } from '@/lib/data';
+import { createClient } from '@/lib/supabase/server';
 import type { School } from '@/lib/types';
 import { CourseCard } from '@/components/CourseCard';
 import { notFound } from 'next/navigation';
@@ -12,14 +12,23 @@ type SchoolPageParams = {
   };
 };
 
-export function generateStaticParams() {
-  return schools.map((school) => ({
-    schoolId: school.id,
-  }));
+async function getSchool(schoolId: string): Promise<School | null> {
+    const supabase = createClient();
+    const { data, error } = await supabase
+        .from('schools')
+        .select('*')
+        .eq('id', schoolId)
+        .single();
+    
+    if (error) {
+        console.error('Error fetching school:', error);
+        return null;
+    }
+    return data;
 }
 
-export default function SchoolPage({ params }: SchoolPageParams) {
-  const school = schools.find((s) => s.id === params.schoolId);
+export default async function SchoolPage({ params }: SchoolPageParams) {
+  const school = await getSchool(params.schoolId);
 
   if (!school) {
     notFound();
@@ -30,9 +39,9 @@ export default function SchoolPage({ params }: SchoolPageParams) {
       <section className="mb-12">
         <div className="relative h-64 md:h-96 w-full mb-8 rounded-lg overflow-hidden">
             <Image
-                src={school.image.imageUrl}
-                alt={school.image.description}
-                data-ai-hint={school.image.imageHint}
+                src={school.image_url}
+                alt={school.image_description}
+                data-ai-hint={school.image_hint}
                 fill
                 className="object-cover"
             />
@@ -53,13 +62,21 @@ export default function SchoolPage({ params }: SchoolPageParams) {
         <h2 className="font-headline text-3xl md:text-4xl font-bold mb-8 text-center">
           Courses Offered
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {school.courses.map((course) => (
-                <CourseCard key={course.id} course={course} />
-            ))}
-        </div>
+        {school.courses && school.courses.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {school.courses.map((course) => (
+                    <CourseCard key={course.id} course={course} />
+                ))}
+            </div>
+        ) : (
+             <div className="text-center py-16">
+                <h3 className="text-2xl font-semibold mb-2">No Courses Found</h3>
+                <p className="text-muted-foreground">
+                    This school has not listed any courses yet.
+                </p>
+            </div>
+        )}
       </section>
     </div>
   );
 }
-

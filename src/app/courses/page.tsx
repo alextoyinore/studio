@@ -1,29 +1,21 @@
-"use client";
 
-import { useState, useMemo } from 'react';
-import { schools } from '@/lib/data';
+import { createClient } from '@/lib/supabase/server';
 import type { School } from '@/lib/types';
-import { SchoolCard } from '@/components/SchoolCard';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import SchoolsClientPage from './SchoolsClientPage';
 
-type Region = 'all' | 'Europe' | 'North America' | 'Other';
+async function getSchools() {
+  const supabase = createClient();
+  const { data, error } = await supabase.from('schools').select('*').order('name', { ascending: true });
 
-export default function SchoolsPage() {
-  const [allSchools] = useState<School[]>(schools);
-  const [activeFilter, setActiveFilter] = useState<Region>('all');
-
-  const getRegion = (country: string): Region => {
-    if (['France', 'Italy'].includes(country)) return 'Europe';
-    if (['USA', 'Canada'].includes(country)) return 'North America';
-    return 'Other';
+  if (error) {
+    console.error('Error fetching schools:', error);
+    return [];
   }
+  return data as School[];
+}
 
-  const filteredSchools = useMemo(() => {
-    if (activeFilter === 'all') {
-      return allSchools;
-    }
-    return allSchools.filter((school) => getRegion(school.country) === activeFilter);
-  }, [allSchools, activeFilter]);
+export default async function SchoolsPage() {
+  const allSchools = await getSchools();
 
   return (
     <div className="container mx-auto px-4 py-8 md:py-16">
@@ -36,33 +28,7 @@ export default function SchoolsPage() {
         </p>
       </section>
 
-      <div className="flex justify-center mb-8">
-         <Tabs
-          value={activeFilter}
-          onValueChange={(value) => setActiveFilter(value as Region)}
-          className="flex justify-center"
-        >
-          <TabsList>
-            <TabsTrigger value="all">All</TabsTrigger>
-            <TabsTrigger value="North America">North America</TabsTrigger>
-            <TabsTrigger value="Europe">Europe</TabsTrigger>
-            <TabsTrigger value="Other">Other</TabsTrigger>
-          </TabsList>
-        </Tabs>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {filteredSchools.length > 0 ? (
-          filteredSchools.map((school) => <SchoolCard key={school.id} school={school} />)
-        ) : (
-          <div className="col-span-full text-center py-16">
-            <h3 className="text-2xl font-semibold mb-2">No Schools Found</h3>
-            <p className="text-muted-foreground">
-              Try adjusting your filters.
-            </p>
-          </div>
-        )}
-      </div>
+      <SchoolsClientPage allSchools={allSchools} />
     </div>
   );
 }
