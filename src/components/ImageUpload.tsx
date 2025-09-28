@@ -51,7 +51,6 @@ export function ImageUpload({ value, onChange }: ImageUploadProps) {
         }
 
         const data = await response.json();
-        console.log("Cloudinary success response:", data);
         onChange(data.secure_url);
          toast({
             title: "Image Uploaded",
