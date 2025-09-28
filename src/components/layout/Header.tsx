@@ -12,6 +12,7 @@ const navLinks = [
   { href: '/', label: 'Home' },
   { href: '/jobs', label: 'Jobs' },
   { href: '/courses', label: 'Schools' },
+  { href: '/blog', label: 'Blog' },
   { href: '/about', label: 'About' },
   { href: '/contact', label: 'Contact' },
 ];
@@ -23,7 +24,7 @@ export function Header() {
     <header className="bg-card/80 backdrop-blur-sm sticky top-0 z-40 border-b">
       <div className="w-full lg:w-3/4 mx-auto flex h-16 items-center justify-between px-4">
         <Link href="/" className="flex items-center gap-2">
-          <Logo className="h-6 w-auto" />
+          <Logo className="h-5 w-auto" />
         </Link>
 
         <nav className="hidden md:flex items-center gap-6">
