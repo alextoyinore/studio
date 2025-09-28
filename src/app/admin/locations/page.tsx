@@ -1,9 +1,38 @@
+
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-react";
 import Link from "next/link";
+import { createClient } from "@/lib/supabase/server";
+import type { Location } from "@/lib/types";
+import {
+  Table,
+  TableHeader,
+  TableRow,
+  TableHead,
+  TableBody,
+  TableCell,
+} from "@/components/ui/table";
+import { format } from "date-fns";
 
-export default function AdminLocationsPage() {
+async function getLocations(): Promise<Location[]> {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from("locations")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error("Error fetching locations:", error);
+    return [];
+  }
+
+  return data;
+}
+
+export default async function AdminLocationsPage() {
+  const locations = await getLocations();
+
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
@@ -20,10 +49,39 @@ export default function AdminLocationsPage() {
           <CardTitle>Locations</CardTitle>
         </CardHeader>
         <CardContent>
-          <p>Location management interface will be here.</p>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Name</TableHead>
+                <TableHead>Description</TableHead>
+                <TableHead className="text-right">Created At</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {locations.length > 0 ? (
+                locations.map((location) => (
+                  <TableRow key={location.id}>
+                    <TableCell className="font-medium">{location.name}</TableCell>
+                    <TableCell className="max-w-sm truncate">{location.description}</TableCell>
+                    <TableCell className="text-right">
+                      {format(new Date(location.created_at), "MMM d, yyyy")}
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={3} className="h-24 text-center">
+                    No locations added yet.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
         </CardContent>
         <CardFooter>
-          <p className="text-muted-foreground text-sm">Showing 0 of 0 locations.</p>
+          <p className="text-muted-foreground text-sm">
+            Showing {locations.length} of {locations.length} locations.
+          </p>
         </CardFooter>
       </Card>
     </div>
