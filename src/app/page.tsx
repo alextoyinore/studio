@@ -1,16 +1,16 @@
 
-import { destinations } from '@/lib/data';
+import { destinations, jobs as mockJobs, schools as mockSchools } from '@/lib/data';
 import { DestinationCard } from '@/components/DestinationCard';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { AnimatedText } from '@/components/AnimatedText';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Plane, Briefcase, HomeIcon, School, FileText, ArrowRight } from 'lucide-react';
-import { createClient } from '@/lib/supabase/server';
 import type { Job, School as SchoolType, BlogPost } from '@/lib/types';
 import { JobCard } from '@/components/JobCard';
 import { SchoolCard } from '@/components/SchoolCard';
 import { BlogCard } from '@/components/BlogCard';
+import { createClient } from '@/lib/supabase/server';
 
 const services = [
   {
@@ -42,23 +42,17 @@ const services = [
 
 async function getFeaturedData() {
     const supabase = createClient();
-    const jobsPromise = supabase.from('jobs').select('*').limit(3).order('created_at', { ascending: false });
-    const schoolsPromise = supabase.from('schools').select('*, courses:courses(*)').limit(3).order('created_at', { ascending: false });
+    // For now, we will use mock data for jobs and schools and only fetch blog posts.
+    // This avoids errors if the tables don't exist yet.
     const blogPromise = supabase.from('blog_posts').select('*').limit(3).order('created_at', { ascending: false });
-    
-    const [
-        { data: jobs, error: jobsError },
-        { data: schools, error: schoolsError },
-        { data: blogPosts, error: blogError }
-    ] = await Promise.all([jobsPromise, schoolsPromise, blogPromise]);
 
-    if(jobsError) console.error("Error fetching jobs:", jobsError.message)
-    if(schoolsError) console.error("Error fetching schools:", schoolsError.message)
-    if(blogError) console.error("Error fetching blog posts:", blogError.message)
+    const [{ data: blogPosts, error: blogError }] = await Promise.all([blogPromise]);
+
+    if(blogError) console.error("Error fetching blog posts:", blogError.message);
 
     return {
-        jobs: (jobs || []) as Job[],
-        schools: (schools || []) as SchoolType[],
+        jobs: (mockJobs.slice(0, 3) || []) as Job[],
+        schools: (mockSchools.slice(0, 3) || []) as SchoolType[],
         blogPosts: (blogPosts || []) as BlogPost[]
     }
 }

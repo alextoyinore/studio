@@ -10,6 +10,11 @@ type JobCardProps = {
 };
 
 export function JobCard({ job }: JobCardProps) {
+  // The API can return either `travel_type` (from Supabase) or `travelType` (from local data).
+  const travelTypes = job.travel_type || job.travelType || [];
+  // The API can return either `apply_url` (from Supabase) or `applyUrl` (from local data).
+  const applyUrl = job.apply_url || job.applyUrl;
+
   return (
     <Card className="flex flex-col transition-all hover:shadow-lg hover:-translate-y-1">
       <CardHeader>
@@ -27,14 +32,14 @@ export function JobCard({ job }: JobCardProps) {
         </div>
         <p className="text-sm text-foreground/80 line-clamp-3">{job.description}</p>
         <div className="flex flex-wrap gap-2">
-            {job.travel_type.map(type => (
+            {travelTypes.map(type => (
                 <Badge key={type} variant="secondary">{type}</Badge>
             ))}
         </div>
       </CardContent>
       <CardFooter>
         <Button asChild className="w-full bg-accent text-accent-foreground hover:bg-accent/90">
-          <Link href={job.apply_url}>Apply Now</Link>
+          <Link href={applyUrl || '#'}>Apply Now</Link>
         </Button>
       </CardFooter>
     </Card>
