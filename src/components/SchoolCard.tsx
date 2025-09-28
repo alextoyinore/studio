@@ -12,15 +12,17 @@ type SchoolCardProps = {
 export function SchoolCard({ school }: SchoolCardProps) {
   return (
     <Card className="overflow-hidden flex flex-col transition-all hover:shadow-lg hover:-translate-y-1">
-        <div className="relative h-48 w-full">
-            <Image
-                src={school.image_url}
-                alt={school.image_description}
-                data-ai-hint={school.image_hint}
-                fill
-                className="object-cover"
-            />
-        </div>
+        {school.image_url && (
+            <div className="relative h-48 w-full">
+                <Image
+                    src={school.image_url}
+                    alt={school.image_description}
+                    data-ai-hint={school.image_hint}
+                    fill
+                    className="object-cover"
+                />
+            </div>
+        )}
       <CardHeader>
         <CardTitle className="font-headline text-2xl">{school.name}</CardTitle>
         <CardDescription>{school.location}</CardDescription>
