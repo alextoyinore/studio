@@ -4,6 +4,7 @@ import Image from "next/image";
 import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 import { Clock, UserCircle } from "lucide-react";
+import { Markdown } from "@/components/Markdown";
 
 type BlogPost = {
   id: string;
@@ -40,28 +41,6 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
     notFound();
   }
 
-  // A very basic markdown-to-html renderer. 
-  // For a real app, you would want to use a more robust library like 'marked' or 'react-markdown'.
-  const renderContent = (content: string) => {
-    return content
-        .split('\n')
-        .map((line, index) => {
-            if (line.startsWith('###')) {
-                return <h3 key={index} className="text-xl font-bold mt-6 mb-2">{line.replace('###', '').trim()}</h3>;
-            }
-            if (line.startsWith('##')) {
-                return <h2 key={index} className="text-2xl font-bold mt-8 mb-3">{line.replace('##', '').trim()}</h2>;
-            }
-            if (line.startsWith('#')) {
-                return <h1 key={index} className="text-3xl font-bold mt-10 mb-4">{line.replace('#', '').trim()}</h1>;
-            }
-            if (line.trim() === '') {
-                return <br key={index} />;
-            }
-            return <p key={index} className="mb-4 leading-relaxed">{line}</p>;
-        })
-  }
-
   return (
     <div className="container mx-auto py-8 md:py-16">
       <article className="max-w-4xl mx-auto">
@@ -93,9 +72,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
             </div>
         </header>
 
-        <div className="prose dark:prose-invert max-w-none mx-auto text-foreground/90">
-          {renderContent(post.content)}
-        </div>
+        <Markdown content={post.content} />
 
         {post.tags && post.tags.length > 0 && (
           <footer className="mt-12 pt-8 border-t">
