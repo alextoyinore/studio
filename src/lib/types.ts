@@ -1,3 +1,4 @@
+
 import type { ImagePlaceholder } from './placeholder-images';
 
 export type TravelType = 'work' | 'student' | 'vacation';
@@ -51,7 +52,6 @@ export type Course = {
   // These are from local data, will be deprecated
   institution?: string;
   location?: string;
-  travelType?: TravelType[];
   enrollUrl?: string;
 };
 
