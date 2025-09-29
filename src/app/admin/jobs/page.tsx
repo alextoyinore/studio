@@ -1,9 +1,38 @@
+
+import { createClient } from "@/lib/supabase/server";
+import type { Job } from "@/lib/types";
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-react";
 import Link from "next/link";
+import {
+  Table,
+  TableHeader,
+  TableRow,
+  TableHead,
+  TableBody,
+  TableCell,
+} from "@/components/ui/table";
+import { format } from "date-fns";
 
-export default function AdminJobsPage() {
+async function getJobs(): Promise<Job[]> {
+  const supabase = createClient();
+  const { data, error } = await supabase
+    .from("jobs")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error("Error fetching jobs:", error);
+    return [];
+  }
+
+  return data;
+}
+
+export default async function AdminJobsPage() {
+  const jobs = await getJobs();
+
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
@@ -17,13 +46,44 @@ export default function AdminJobsPage() {
       </div>
       <Card>
         <CardHeader>
-          <CardTitle>Jobs</CardTitle>
+          <CardTitle>Job Postings</CardTitle>
         </CardHeader>
         <CardContent>
-          <p>Job posting management interface will be here.</p>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Title</TableHead>
+                <TableHead>Company</TableHead>
+                <TableHead>Location</TableHead>
+                <TableHead className="text-right">Created At</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {jobs.length > 0 ? (
+                jobs.map((job) => (
+                  <TableRow key={job.id}>
+                    <TableCell className="font-medium">{job.title}</TableCell>
+                    <TableCell>{job.company}</TableCell>
+                    <TableCell>{job.location}</TableCell>
+                    <TableCell className="text-right">
+                      {format(new Date(job.created_at), "MMM d, yyyy")}
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={4} className="h-24 text-center">
+                    No jobs posted yet.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
         </CardContent>
         <CardFooter>
-          <p className="text-muted-foreground text-sm">Showing 0 of 0 jobs.</p>
+          <p className="text-muted-foreground text-sm">
+            Showing {jobs.length} of {jobs.length} jobs.
+          </p>
         </CardFooter>
       </Card>
     </div>
