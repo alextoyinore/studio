@@ -12,7 +12,11 @@ type JobCardProps = {
 
 export function JobCard({ job }: JobCardProps) {
   // The API can return either `travel_type` (from Supabase) or `travelType` (from local data).
-  const travelTypes = job.travel_type || job.travelType || [];
+  let travelTypes = job.travel_type || job.travelType || [];
+  if (!Array.isArray(travelTypes)) {
+    travelTypes = [];
+  }
+  
   // The API can return either `apply_url` (from Supabase) or `applyUrl` (from local data).
   const applyUrl = job.apply_url || job.applyUrl;
 
