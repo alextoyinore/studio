@@ -65,7 +65,7 @@ export async function signup(data: LoginFormInput) {
              // to avoid orphaned auth entries. Or at least log this properly.
              await supabase.auth.admin.deleteUser(signUpData.user.id);
              console.error('Error creating profile, rolling back user creation:', profileError);
-             return { success: false, message: "An unexpected error occurred during signup. Please try again." };
+             return { success: false, message: `Signup succeeded, but failed to create user profile. Please ensure the 'profiles' table exists and has the correct RLS policies. Error: ${profileError.message}` };
         }
     }
 
