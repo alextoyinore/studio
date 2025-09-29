@@ -1,4 +1,5 @@
 
+
 import { createClient } from '@/lib/supabase/server';
 import type { School } from '@/lib/types';
 import { CourseCard } from '@/components/CourseCard';
@@ -16,15 +17,18 @@ async function getSchool(schoolId: string): Promise<School | null> {
     const supabase = createClient();
     const { data, error } = await supabase
         .from('schools')
-        .select('*')
+        .select(`
+            *,
+            courses (*)
+        `)
         .eq('id', schoolId)
         .single();
     
     if (error) {
-        console.error('Error fetching school:', error);
+        console.error('Error fetching school with courses:', error);
         return null;
     }
-    return data;
+    return data as School;
 }
 
 export default async function SchoolPage({ params }: SchoolPageParams) {

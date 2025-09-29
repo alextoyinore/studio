@@ -27,7 +27,7 @@ export function CourseCard({ course }: CourseCardProps) {
           <Clock className="h-4 w-4 mr-2 text-accent" />
           {course.duration}
         </div>
-        <Markdown content={course.description} className="text-sm text-foreground/80 line-clamp-3" />
+        <Markdown content={course.description} className="text-sm" />
         <div className="flex flex-wrap gap-2">
             {course.travel_type.map(type => (
                 <Badge key={type} variant="secondary">{type}</Badge>
