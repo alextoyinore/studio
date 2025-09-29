@@ -35,13 +35,18 @@ export type Job = {
 
 export type Course = {
   id: string;
+  created_at: string;
   title: string;
-  institution: string;
-  location: string;
-  duration: string;
   description: string;
-  travelType: TravelType[];
-  enrollUrl: string;
+  duration: string;
+  enroll_url: string;
+  travel_type: TravelType[];
+  school_id: string;
+  // These are from local data, will be deprecated
+  institution?: string;
+  location?: string;
+  travelType?: TravelType[];
+  enrollUrl?: string;
 };
 
 export type School = {

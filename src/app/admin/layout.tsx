@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { SidebarProvider, Sidebar, SidebarHeader, SidebarContent, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarFooter, SidebarTrigger } from '@/components/ui/sidebar';
-import { Home, Map, School, Briefcase, Pencil, Settings, User, ArrowLeft, Mail, LogOut } from 'lucide-react';
+import { Home, Map, School, Briefcase, Pencil, Settings, User, ArrowLeft, Mail, LogOut, BookOpen } from 'lucide-react';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
 import type { User as SupabaseUser } from '@supabase/supabase-js';
@@ -16,6 +16,7 @@ const adminNavItems = [
     { href: '/admin', label: 'Dashboard', icon: Home },
     { href: '/admin/locations', label: 'Locations', icon: Map },
     { href: '/admin/schools', label: 'Schools', icon: School },
+    { href: '/admin/courses', label: 'Courses', icon: BookOpen },
     { href: '/admin/jobs', label: 'Jobs', icon: Briefcase },
     { href: '/admin/blog', label: 'Blog', icon: Pencil },
     { href: '/admin/contacts', label: 'Contacts', icon: Mail },

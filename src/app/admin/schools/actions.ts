@@ -27,8 +27,6 @@ export async function addSchool(data: SchoolFormInput) {
 
   const supabase = createClient();
   
-  // For now, courses will be an empty array.
-  // A separate interface would be needed to manage courses for a school.
   const { error } = await supabase.from("schools").insert([
     {
       name,
@@ -38,7 +36,6 @@ export async function addSchool(data: SchoolFormInput) {
       image_url: imageUrl,
       image_description: imageDescription,
       image_hint: imageHint,
-      courses: [], 
     },
   ]);
 
