@@ -22,6 +22,7 @@ import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/com
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { addJob } from "../actions";
+import { ImageUpload } from "@/components/ImageUpload";
 
 const formSchema = z.object({
   title: z.string().min(3, "Title must be at least 3 characters."),
@@ -31,6 +32,9 @@ const formSchema = z.object({
   description: z.string().min(10, "Description must be at least 10 characters."),
   applyUrl: z.string().url("Please enter a valid URL for the application link."),
   travelType: z.string().min(3, "Please enter at least one travel type, separated by commas."),
+  imageUrl: z.string().optional(),
+  imageDescription: z.string().optional(),
+  imageHint: z.string().optional(),
 });
 
 type JobFormValues = z.infer<typeof formSchema>;
@@ -49,6 +53,9 @@ export default function AddJobPage() {
       description: "",
       applyUrl: "",
       travelType: "",
+      imageUrl: "",
+      imageDescription: "",
+      imageHint: "",
     },
   });
 
@@ -183,6 +190,51 @@ export default function AddJobPage() {
                     </FormControl>
                      <FormDescription>
                       The direct link for candidates to apply.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+               <h3 className="text-lg font-medium pt-4 border-t">Job Image</h3>
+              <FormField
+                control={form.control}
+                name="imageUrl"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <ImageUpload value={field.value || ""} onChange={field.onChange} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="imageDescription"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Image Description</FormLabel>
+                    <FormControl>
+                      <Input placeholder="e.g., The company's logo or office." {...field} />
+                    </FormControl>
+                    <FormDescription>
+                      This is used for image alt text (accessibility).
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="imageHint"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Image AI Hint</FormLabel>
+                    <FormControl>
+                      <Input placeholder="e.g., company logo" {...field} />
+                    </FormControl>
+                    <FormDescription>
+                      Provide one or two keywords for AI image search if no image is uploaded.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>

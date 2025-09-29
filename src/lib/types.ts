@@ -31,6 +31,12 @@ export type Job = {
   description: string;
   travel_type: TravelType[];
   apply_url: string;
+  image_url?: string;
+  image_description?: string;
+  image_hint?: string;
+  // for local data
+  travelType?: TravelType[];
+  applyUrl?: string;
 };
 
 export type Course = {

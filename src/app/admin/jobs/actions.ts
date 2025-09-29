@@ -12,6 +12,9 @@ const formSchema = z.object({
   description: z.string().min(10, "Description must be at least 10 characters."),
   applyUrl: z.string().url("Please enter a valid URL for the application link."),
   travelType: z.string().min(3, "Please select at least one travel type."),
+  imageUrl: z.string().optional(),
+  imageDescription: z.string().optional(),
+  imageHint: z.string().optional(),
 });
 
 type JobFormInput = z.infer<typeof formSchema>;
@@ -25,7 +28,7 @@ export async function addJob(data: JobFormInput) {
 
   const supabase = createClient();
   
-  const { title, company, location, salary, description, applyUrl, travelType } = parsedData.data;
+  const { title, company, location, salary, description, applyUrl, travelType, imageUrl, imageDescription, imageHint } = parsedData.data;
 
   // Convert comma-separated string to array
   const travelTypeArray = travelType.split(',').map(item => item.trim());
@@ -39,6 +42,9 @@ export async function addJob(data: JobFormInput) {
       description,
       apply_url: applyUrl,
       travel_type: travelTypeArray,
+      image_url: imageUrl,
+      image_description: imageDescription,
+      image_hint: imageHint,
     },
   ]);
 
