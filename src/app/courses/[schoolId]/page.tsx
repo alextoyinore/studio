@@ -69,7 +69,7 @@ export default async function SchoolPage({ params }: SchoolPageParams) {
         {school.courses && school.courses.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {school.courses.map((course) => (
-                    <CourseCard key={course.id} course={course} />
+                    <CourseCard key={course.id} course={course} school={school} />
                 ))}
             </div>
         ) : (
