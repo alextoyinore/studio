@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger, SheetClose } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetTrigger, SheetClose, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { Menu } from 'lucide-react';
 import { Logo } from '../Logo';
 import { useState } from 'react';
@@ -54,6 +54,9 @@ export function Header() {
               </Button>
             </SheetTrigger>
             <SheetContent side="right">
+               <SheetHeader>
+                <SheetTitle className="sr-only">Main Menu</SheetTitle>
+              </SheetHeader>
               <nav className="flex flex-col gap-6 mt-8">
                 {navLinks.map((link) => (
                   <SheetClose asChild key={link.href}>
