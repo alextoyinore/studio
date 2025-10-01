@@ -1,4 +1,5 @@
-import { destinations, schools, jobs } from '@/lib/data';
+
+import { createClient } from '@/lib/supabase/server';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { Badge } from '@/components/ui/badge';
@@ -6,37 +7,75 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { SchoolCard } from '@/components/SchoolCard';
 import { JobCard } from '@/components/JobCard';
 import { CheckCircle, Info } from 'lucide-react';
+import type { Location, School, Job } from '@/lib/types';
 
-type DestinationPageParams = {
+type LocationPageParams = {
   params: {
-    destinationId: string;
+    locationId: string;
   };
 };
 
-export function generateStaticParams() {
-  return destinations.map((destination) => ({
-    destinationId: destination.id,
-  }));
+type LocationWithRelations = Location & {
+    schools: School[];
+    jobs: Job[];
 }
 
-export default function DestinationPage({ params }: DestinationPageParams) {
-  const destination = destinations.find((d) => d.id === params.destinationId);
+async function getLocation(locationId: string): Promise<LocationWithRelations | null> {
+    const supabase = createClient();
+    
+    const { data: locationData, error: locationError } = await supabase
+        .from('locations')
+        .select('*')
+        .eq('id', locationId)
+        .single();
+    
+    if (locationError || !locationData) {
+        console.error("Error fetching location:", locationError);
+        return null;
+    }
 
-  if (!destination) {
+    const countryName = locationData.name.split(',')[0].trim();
+
+    const { data: schoolsData, error: schoolsError } = await supabase
+        .from('schools')
+        .select('*, courses(*)')
+        .ilike('country', `%${countryName}%`);
+
+    if(schoolsError) console.error("Error fetching schools:", schoolsError);
+
+    const { data: jobsData, error: jobsError } = await supabase
+        .from('jobs')
+        .select('*')
+        .ilike('location', `%${countryName}%`);
+    
+    if(jobsError) console.error("Error fetching jobs:", jobsError);
+
+
+    return {
+        ...locationData,
+        schools: (schoolsData as School[]) || [],
+        jobs: (jobsData as Job[]) || [],
+    };
+}
+
+
+export default async function LocationPage({ params }: LocationPageParams) {
+  const location = await getLocation(params.locationId);
+
+  if (!location) {
     notFound();
   }
 
-  const relatedSchools = schools.filter(school => school.country.toLowerCase() === destination.name.toLowerCase());
-  const relatedJobs = jobs.filter(job => job.location.toLowerCase().includes(destination.name.toLowerCase()));
+  const { schools: relatedSchools, jobs: relatedJobs } = location;
 
   return (
     <div className="container mx-auto px-4 py-8 md:py-16">
       <section className="mb-12">
         <div className="relative h-64 md:h-96 w-full mb-8 rounded-lg overflow-hidden shadow-lg">
           <Image
-            src={destination.image.imageUrl}
-            alt={destination.image.description}
-            data-ai-hint={destination.image.imageHint}
+            src={location.image_url}
+            alt={location.image_description}
+            data-ai-hint={location.image_hint}
             fill
             className="object-cover"
           />
@@ -44,33 +83,35 @@ export default function DestinationPage({ params }: DestinationPageParams) {
         </div>
         <div className="relative -mt-20 md:-mt-24 max-w-4xl mx-auto text-center z-10">
           <h1 className="font-headline text-4xl md:text-6xl font-bold mb-2 tracking-tight text-white">
-            {destination.name}
+            {location.name}
           </h1>
           <p className="text-lg md:text-xl text-slate-200 mt-4">
-            {destination.description}
+            {location.description}
           </p>
         </div>
       </section>
 
       <div className="max-w-5xl mx-auto">
-        <section className="mb-12">
-            <h2 className="font-headline text-3xl md:text-4xl font-bold mb-8 text-center">
-                Top Attractions
-            </h2>
-             <div className="flex flex-wrap justify-center gap-4">
-                {destination.attractions.map((attraction) => (
-                    <Badge key={attraction} variant="secondary" className="text-base px-4 py-2">
-                       {attraction}
-                    </Badge>
-                ))}
-            </div>
-        </section>
+        {location.attractions && location.attractions.length > 0 && (
+            <section className="mb-12">
+                <h2 className="font-headline text-3xl md:text-4xl font-bold mb-8 text-center">
+                    Top Attractions
+                </h2>
+                <div className="flex flex-wrap justify-center gap-4">
+                    {location.attractions.map((attraction) => (
+                        <Badge key={attraction} variant="secondary" className="text-base px-4 py-2">
+                        {attraction}
+                        </Badge>
+                    ))}
+                </div>
+            </section>
+        )}
 
 
         {relatedSchools.length > 0 && (
           <section className="mb-12">
             <h2 className="font-headline text-3xl md:text-4xl font-bold mb-8 text-center">
-              Top Schools in {destination.name}
+              Top Schools in {location.name.split(',')[0]}
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {relatedSchools.map((school) => (
@@ -112,7 +153,7 @@ export default function DestinationPage({ params }: DestinationPageParams) {
                 <li className="flex items-start">
                   <CheckCircle className="h-5 w-5 mr-3 text-green-500 mt-1 shrink-0" />
                   <span>
-                    <strong>Check Official Sources:</strong> Always consult the official embassy or consulate website of {destination.name} in your country for the most accurate and up-to-date information.
+                    <strong>Check Official Sources:</strong> Always consult the official embassy or consulate website of {location.name} in your country for the most accurate and up-to-date information.
                   </span>
                 </li>
                 <li className="flex items-start">
@@ -138,3 +179,4 @@ export default function DestinationPage({ params }: DestinationPageParams) {
     </div>
   );
 }
+

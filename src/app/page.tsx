@@ -1,17 +1,16 @@
 
-import { destinations } from '@/lib/data';
-import { DestinationCard } from '@/components/DestinationCard';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { AnimatedText } from '@/components/AnimatedText';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Plane, Briefcase, HomeIcon, School, FileText, ArrowRight, Quote } from 'lucide-react';
-import type { Job, School as SchoolType, BlogPost } from '@/lib/types';
+import type { Job, School as SchoolType, BlogPost, Location } from '@/lib/types';
 import { JobCard } from '@/components/JobCard';
 import { SchoolCard } from '@/components/SchoolCard';
 import { BlogCard } from '@/components/BlogCard';
 import { createClient } from '@/lib/supabase/server';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { LocationCard } from '@/components/LocationCard';
 
 const services = [
   {
@@ -78,30 +77,33 @@ async function getFeaturedData() {
     const supabase = createClient();
     
     const jobsPromise = supabase.from('jobs').select('*').limit(3).order('created_at', { ascending: false });
-    const schoolsPromise = supabase.from('schools').select('*').limit(3).order('created_at', { ascending: false });
+    const schoolsPromise = supabase.from('schools').select('*, courses(*)').limit(3).order('created_at', { ascending: false });
     const blogPromise = supabase.from('blog_posts').select('*').limit(3).order('created_at', { ascending: false });
+    const locationsPromise = supabase.from('locations').select('*').limit(3).order('created_at', { ascending: false });
 
     const [
         { data: jobs, error: jobsError },
         { data: schools, error: schoolsError },
-        { data: blogPosts, error: blogError }
-    ] = await Promise.all([jobsPromise, schoolsPromise, blogPromise]);
+        { data: blogPosts, error: blogError },
+        { data: locations, error: locationsError }
+    ] = await Promise.all([jobsPromise, schoolsPromise, blogPromise, locationsPromise]);
 
     if(jobsError) console.error("Error fetching jobs:", jobsError.message)
     if(schoolsError) console.error("Error fetching schools:", schoolsError.message)
     if(blogError) console.error("Error fetching blog posts:", blogError.message)
+    if(locationsError) console.error("Error fetching locations:", locationsError.message)
 
     return {
         jobs: (jobs || []) as Job[],
         schools: (schools || []) as SchoolType[],
-        blogPosts: (blogPosts || []) as BlogPost[]
+        blogPosts: (blogPosts || []) as BlogPost[],
+        locations: (locations || []) as Location[]
     }
 }
 
 
 export default async function Home() {
-  const featuredDestinations = destinations.slice(0, 3);
-  const { jobs, schools, blogPosts } = await getFeaturedData();
+  const { jobs, schools, blogPosts, locations } = await getFeaturedData();
 
   return (
     <div className="container mx-auto py-8 md:py-16">
@@ -141,14 +143,21 @@ export default async function Home() {
         </div>
       </section>
 
+      {locations.length > 0 && (
       <section className="mb-16">
-        <h2 className="font-headline text-3xl md:text-4xl font-bold mb-8 text-center">Featured Destinations</h2>
+        <div className="flex justify-between items-center mb-8">
+            <h2 className="font-headline text-3xl md:text-4xl font-bold">Featured Destinations</h2>
+            <Button asChild variant="link">
+                <Link href="/locations">View All <ArrowRight className="ml-2"/></Link>
+            </Button>
+        </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {featuredDestinations.map((destination) => (
-            <DestinationCard key={destination.id} destination={destination} />
+          {locations.map((location) => (
+            <LocationCard key={location.id} location={location} />
           ))}
         </div>
       </section>
+      )}
 
        {jobs.length > 0 && (
         <section className="mb-16">

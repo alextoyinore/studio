@@ -4,14 +4,6 @@ import type { ImagePlaceholder } from './placeholder-images';
 
 export type TravelType = 'work' | 'student' | 'vacation';
 
-export type Destination = {
-  id: string;
-  name: string;
-  description: string;
-  image: ImagePlaceholder;
-  attractions: string[];
-};
-
 export type Location = {
   id: string;
   created_at: string;
