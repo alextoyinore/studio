@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -27,7 +27,7 @@ import type { Job } from "@/lib/types";
 import { createClient } from "@/lib/supabase/client";
 
 const formSchema = z.object({
-  jobId: z.string(),
+  jobId: z.string().uuid(),
   fullName: z.string().min(2, "Full name must be at least 2 characters."),
   email: z.string().email("Please enter a valid email address."),
   phone: z.string().optional(),
@@ -38,7 +38,14 @@ const formSchema = z.object({
 
 type ApplicationFormValues = z.infer<typeof formSchema>;
 
-export default function JobApplicationPage({ params }: { params: { jobId: string } }) {
+// The params are a promise in client components, so we need to type it correctly
+type PageProps = {
+    params: Promise<{ jobId: string }>;
+}
+
+export default function JobApplicationPage({ params }: PageProps) {
+  const { jobId } = use(params);
+
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [job, setJob] = useState<Job | null>(null);
@@ -46,7 +53,7 @@ export default function JobApplicationPage({ params }: { params: { jobId: string
   const form = useForm<ApplicationFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      jobId: params.jobId,
+      jobId: jobId,
       fullName: "",
       email: "",
       phone: "",
@@ -58,7 +65,7 @@ export default function JobApplicationPage({ params }: { params: { jobId: string
   useEffect(() => {
     async function fetchJob() {
       const supabase = createClient();
-      const { data, error } = await supabase.from('jobs').select('*').eq('id', params.jobId).single();
+      const { data, error } = await supabase.from('jobs').select('*').eq('id', jobId).single();
       if (error) {
         console.error("Error fetching job details", error);
         toast({
@@ -70,7 +77,7 @@ export default function JobApplicationPage({ params }: { params: { jobId: string
       }
     }
     fetchJob();
-  }, [params.jobId, toast]);
+  }, [jobId, toast]);
 
   async function onSubmit(values: ApplicationFormValues) {
     setIsSubmitting(true);
