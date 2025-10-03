@@ -23,7 +23,7 @@ async function getBlogPosts(): Promise<BlogPostWithAuthor[]> {
   const supabase = createClient();
   const { data, error } = await supabase
     .from("blog_posts")
-    .select("*, author:profiles!blog_posts_author_fkey(email)")
+    .select("*, author:profiles(email)")
     .order("created_at", { ascending: false });
 
   if (error) {
@@ -31,8 +31,6 @@ async function getBlogPosts(): Promise<BlogPostWithAuthor[]> {
     return [];
   }
   
-  // The query returns `author` as an object { email: string } but the type expects Profile.
-  // We need to cast it correctly.
   return data.map(post => ({
       ...post,
       author: post.author as Profile | null,
