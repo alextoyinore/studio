@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { AnimatedText } from '@/components/AnimatedText';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Plane, Briefcase, HomeIcon, School, FileText, ArrowRight, Quote } from 'lucide-react';
-import type { Job, School as SchoolType, BlogPost, Location } from '@/lib/types';
+import type { Job, School as SchoolType, BlogPost, Location, Profile } from '@/lib/types';
 import { JobCard } from '@/components/JobCard';
 import { SchoolCard } from '@/components/SchoolCard';
 import { BlogCard } from '@/components/BlogCard';
@@ -73,12 +73,16 @@ const testimonials = [
     }
 ]
 
+type BlogPostWithAuthor = Omit<BlogPost, 'author'> & {
+    author: Profile | null;
+}
+
 async function getFeaturedData() {
     const supabase = createClient();
     
     const jobsPromise = supabase.from('jobs').select('*').limit(3).order('created_at', { ascending: false });
     const schoolsPromise = supabase.from('schools').select('*, courses(*)').limit(3).order('created_at', { ascending: false });
-    const blogPromise = supabase.from('blog_posts').select('*').limit(3).order('created_at', { ascending: false });
+    const blogPromise = supabase.from('blog_posts').select('*, author:profiles(email)').limit(3).order('created_at', { ascending: false });
     const locationsPromise = supabase.from('locations').select('*').limit(3).order('created_at', { ascending: false });
 
     const [
@@ -96,7 +100,7 @@ async function getFeaturedData() {
     return {
         jobs: (jobs || []) as Job[],
         schools: (schools || []) as SchoolType[],
-        blogPosts: (blogPosts || []) as BlogPost[],
+        blogPosts: (blogPosts || []) as BlogPostWithAuthor[],
         locations: (locations || []) as Location[]
     }
 }
@@ -119,7 +123,7 @@ export default async function Home() {
             <Link href="/jobs">Find Jobs</Link>
           </Button>
           <Button asChild size="lg" variant="secondary">
-            <Link href="/courses">Explore Courses</Link>
+            <Link href="/courses">Explore Schools</Link>
           </Button>
         </div>
       </section>

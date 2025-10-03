@@ -70,13 +70,19 @@ export type ContactSubmission = {
   message: string;
 };
 
+export type Profile = {
+    id: string;
+    email: string;
+    role: 'superadmin' | 'admin' | 'staff' | 'user';
+}
+
 export type BlogPost = {
   id: string;
   created_at: string;
   title: string;
   slug: string;
   content: string;
-  author: string;
+  author: string | Profile; // Will be profile object when fetched with relation
   image_url: string;
   image_description: string;
   image_hint: string;

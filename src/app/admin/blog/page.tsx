@@ -1,6 +1,6 @@
 
 import { createClient } from "@/lib/supabase/server";
-import type { BlogPost } from "@/lib/types";
+import type { BlogPost, Profile } from "@/lib/types";
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-react";
@@ -15,18 +15,28 @@ import {
 } from "@/components/ui/table";
 import { format } from "date-fns";
 
-async function getBlogPosts(): Promise<BlogPost[]> {
+type BlogPostWithAuthor = Omit<BlogPost, 'author'> & {
+    author: Profile | null;
+}
+
+async function getBlogPosts(): Promise<BlogPostWithAuthor[]> {
   const supabase = createClient();
   const { data, error } = await supabase
     .from("blog_posts")
-    .select("*")
+    .select("*, author:profiles(email)")
     .order("created_at", { ascending: false });
 
   if (error) {
     console.error("Error fetching blog posts:", error);
     return [];
   }
-  return data;
+  
+  // The query returns `author` as an object { email: string } but the type expects Profile.
+  // We need to cast it correctly.
+  return data.map(post => ({
+      ...post,
+      author: post.author as Profile | null,
+  })) as BlogPostWithAuthor[];
 }
 
 
@@ -63,7 +73,7 @@ export default async function AdminBlogPage() {
                 posts.map((post) => (
                   <TableRow key={post.id}>
                     <TableCell className="font-medium">{post.title}</TableCell>
-                    <TableCell>{post.author}</TableCell>
+                    <TableCell>{post.author?.email || 'N/A'}</TableCell>
                     <TableCell>{post.category}</TableCell>
                     <TableCell className="text-right">
                       {format(new Date(post.created_at), "MMM d, yyyy")}

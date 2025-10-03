@@ -1,4 +1,4 @@
-import type { BlogPost } from '@/lib/types';
+import type { BlogPost, Profile } from '@/lib/types';
 import Image from 'next/image';
 import Link from 'next/link';
 import { format } from 'date-fns';
@@ -6,10 +6,12 @@ import { ArrowRight } from 'lucide-react';
 import { Badge } from './ui/badge';
 
 type BlogCardFeaturedProps = {
-  post: BlogPost;
+  post: BlogPost & { author: Profile | null };
 };
 
 export function BlogCardFeatured({ post }: BlogCardFeaturedProps) {
+  const authorName = (typeof post.author === 'object' && post.author !== null) ? post.author.email : 'Anonymous';
+
   return (
     <div className="relative rounded-lg overflow-hidden group shadow-lg">
       <Link href={`/blog/${post.slug}`}>
@@ -27,7 +29,7 @@ export function BlogCardFeatured({ post }: BlogCardFeaturedProps) {
           <h2 className="font-headline text-3xl md:text-4xl font-bold mb-4 max-w-2xl">{post.title}</h2>
           <p className="text-slate-300 mb-4 max-w-2xl hidden md:line-clamp-2">{post.excerpt}</p>
           <div className="flex items-center text-sm gap-4">
-            <span>By {post.author}</span>
+            <span>By {authorName}</span>
             <span>&bull;</span>
             <time dateTime={post.created_at}>{format(new Date(post.created_at), 'MMMM d, yyyy')}</time>
           </div>

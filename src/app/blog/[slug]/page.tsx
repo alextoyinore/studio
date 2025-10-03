@@ -5,24 +5,17 @@ import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 import { Clock, UserCircle } from "lucide-react";
 import { Markdown } from "@/components/Markdown";
+import type { BlogPost, Profile } from "@/lib/types";
 
-type BlogPost = {
-  id: string;
-  created_at: string;
-  title: string;
-  content: string;
-  author: string;
-  image_url: string;
-  excerpt: string;
-  category: string;
-  tags: string[];
-};
+type BlogPostWithAuthor = Omit<BlogPost, 'author'> & {
+    author: Profile | null;
+}
 
-async function getPost(slug: string): Promise<BlogPost | null> {
+async function getPost(slug: string): Promise<BlogPostWithAuthor | null> {
   const supabase = createClient();
   const { data, error } = await supabase
     .from("blog_posts")
-    .select("*")
+    .select("*, author:profiles(email)")
     .eq("slug", slug)
     .single();
 
@@ -30,8 +23,11 @@ async function getPost(slug: string): Promise<BlogPost | null> {
     console.error("Error fetching post:", error);
     return null;
   }
-
-  return data;
+  
+  return {
+    ...data,
+    author: data.author as Profile | null,
+  } as BlogPostWithAuthor;
 }
 
 export default async function BlogPostPage({ params }: { params: { slug: string } }) {
@@ -40,6 +36,8 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
   if (!post) {
     notFound();
   }
+
+  const authorName = post.author?.email || 'Anonymous';
 
   return (
     <div className="container mx-auto py-8 md:py-16">
@@ -62,7 +60,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
                 <div className="flex justify-center items-center gap-6 text-sm text-slate-200">
                     <div className="flex items-center gap-2">
                         <UserCircle className="h-5 w-5" />
-                        <span>{post.author}</span>
+                        <span>{authorName}</span>
                     </div>
                     <div className="flex items-center gap-2">
                         <Clock className="h-5 w-5" />

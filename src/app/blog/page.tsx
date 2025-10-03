@@ -1,21 +1,28 @@
 
 import { createClient } from "@/lib/supabase/server";
-import type { BlogPost } from "@/lib/types";
+import type { BlogPost, Profile } from "@/lib/types";
 import { BlogCard } from "@/components/BlogCard";
 import { BlogCardFeatured } from "@/components/BlogCardFeatured";
 
-async function getBlogPosts(): Promise<BlogPost[]> {
+type BlogPostWithAuthor = Omit<BlogPost, 'author'> & {
+    author: Profile | null;
+}
+
+async function getBlogPosts(): Promise<BlogPostWithAuthor[]> {
   const supabase = createClient();
   const { data, error } = await supabase
     .from("blog_posts")
-    .select("*")
+    .select("*, author:profiles(email)")
     .order("created_at", { ascending: false });
 
   if (error) {
     console.error("Error fetching blog posts:", error);
     return [];
   }
-  return data;
+  return data.map(post => ({
+      ...post,
+      author: post.author as Profile | null,
+  })) as BlogPostWithAuthor[];
 }
 
 export default async function BlogPage() {

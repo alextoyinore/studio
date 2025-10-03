@@ -27,7 +27,6 @@ import { ImageUpload } from "@/components/ImageUpload";
 const formSchema = z.object({
   title: z.string().min(5, "Title must be at least 5 characters."),
   content: z.string().min(20, "Content must be at least 20 characters."),
-  author: z.string().min(2, "Author name must be at least 2 characters."),
   imageUrl: z.string().min(1, "Please upload an image for the cover."),
   imageDescription: z.string().optional(),
   imageHint: z.string().optional(),
@@ -47,7 +46,6 @@ export default function AddBlogPostPage() {
     defaultValues: {
       title: "",
       content: "",
-      author: "",
       imageUrl: "",
       imageDescription: "",
       imageHint: "",
@@ -106,19 +104,6 @@ export default function AddBlogPostPage() {
                       <Input placeholder="e.g., My Trip to the Mountains" {...field} />
                     </FormControl>
                     <FormDescription>The slug will be automatically generated from this.</FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-               <FormField
-                control={form.control}
-                name="author"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Author</FormLabel>
-                    <FormControl>
-                      <Input placeholder="e.g., John Doe" {...field} />
-                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
