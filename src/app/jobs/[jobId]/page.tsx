@@ -80,7 +80,7 @@ export default async function JobDetailsPage({ params }: { params: { jobId: stri
                              <Button asChild size="lg" className="w-full bg-accent text-accent-foreground hover:bg-accent/90">
                                 <Link href={`/jobs/${job.id}/apply`}>Apply Now</Link>
                             </Button>
-                            {job.travel_type && job.travel_type.length > 0 && (
+                            {job.travel_type && Array.isArray(job.travel_type) && job.travel_type.length > 0 && (
                                 <div>
                                     <h3 className="font-semibold mb-3">Relevant Travel Types</h3>
                                     <div className="flex flex-wrap gap-2">
