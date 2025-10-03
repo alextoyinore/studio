@@ -92,7 +92,7 @@ export default async function LocationPage({ params }: LocationPageParams) {
       </section>
 
       <div className="max-w-5xl mx-auto">
-        {location.attractions && location.attractions.length > 0 && (
+        {location.attractions && Array.isArray(location.attractions) && location.attractions.length > 0 && (
             <section className="mb-12">
                 <h2 className="font-headline text-3xl md:text-4xl font-bold mb-8 text-center">
                     Top Attractions
@@ -179,4 +179,3 @@ export default async function LocationPage({ params }: LocationPageParams) {
     </div>
   );
 }
-
