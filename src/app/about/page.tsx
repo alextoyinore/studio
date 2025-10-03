@@ -18,10 +18,10 @@ export default function AboutPage() {
         <section className="mb-12">
             <div className="relative h-80 w-full rounded-lg overflow-hidden shadow-lg">
                  <Image
-                    src="https://picsum.photos/seed/106/1200/400"
-                    alt="Team of Oceanic Agency"
+                    src="https://picsum.photos/seed/airplane/1200/400"
+                    alt="Airplane flying in the sky"
                     fill
-                    data-ai-hint="team collaboration"
+                    data-ai-hint="airplane"
                     className="object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
@@ -99,4 +99,3 @@ export default function AboutPage() {
     </div>
   );
 }
-
