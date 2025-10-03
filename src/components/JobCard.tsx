@@ -16,9 +16,6 @@ export function JobCard({ job }: JobCardProps) {
   if (!Array.isArray(travelTypes)) {
     travelTypes = [];
   }
-  
-  // The API can return either `apply_url` (from Supabase) or `applyUrl` (from local data).
-  const applyUrl = job.apply_url || job.applyUrl;
 
   const imageUrl = job.image_url || `https://picsum.photos/seed/${job.id}/400/200`;
   const imageDescription = job.image_description || `Image for ${job.title}`;
@@ -57,7 +54,7 @@ export function JobCard({ job }: JobCardProps) {
       </CardContent>
       <CardFooter>
         <Button asChild className="w-full bg-accent text-accent-foreground hover:bg-accent/90">
-          <Link href={applyUrl || '#'}>Apply Now</Link>
+          <Link href={`/jobs/${job.id}/apply`}>Apply Now</Link>
         </Button>
       </CardFooter>
     </Card>
