@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import * as z from "zod";
 import { cookies } from "next/headers";
+import { revalidatePath } from "next/cache";
 
 const loginSchema = z.object({
   email: z.string().email(),
