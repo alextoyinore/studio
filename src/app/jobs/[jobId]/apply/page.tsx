@@ -41,11 +41,12 @@ export default function JobApplicationPage({ params }: { params: { jobId: string
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [job, setJob] = useState<Job | null>(null);
+  const { jobId } = params;
 
   useEffect(() => {
     async function fetchJob() {
       const supabase = createClient();
-      const { data, error } = await supabase.from('jobs').select('*').eq('id', params.jobId).single();
+      const { data, error } = await supabase.from('jobs').select('*').eq('id', jobId).single();
       if (error) {
         console.error("Error fetching job details", error);
         toast({
@@ -57,12 +58,12 @@ export default function JobApplicationPage({ params }: { params: { jobId: string
       }
     }
     fetchJob();
-  }, [params.jobId, toast]);
+  }, [jobId, toast]);
 
   const form = useForm<ApplicationFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      jobId: params.jobId,
+      jobId: jobId,
       fullName: "",
       email: "",
       phone: "",
