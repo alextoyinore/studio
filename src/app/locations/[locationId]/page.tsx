@@ -1,4 +1,3 @@
-
 import { createClient } from '@/lib/supabase/server';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
@@ -37,18 +36,23 @@ async function getLocation(locationId: string): Promise<LocationWithRelations | 
 
     const countryName = locationData.name.split(',')[0].trim();
 
-    const { data: schoolsData, error: schoolsError } = await supabase
+    const schoolsPromise = supabase
         .from('schools')
         .select('*, courses(*)')
         .ilike('country', `%${countryName}%`);
 
-    if(schoolsError) console.error("Error fetching schools:", schoolsError);
-
-    const { data: jobsData, error: jobsError } = await supabase
+    const jobsPromise = supabase
         .from('jobs')
         .select('*')
         .ilike('location', `%${countryName}%`);
     
+    const [
+        { data: schoolsData, error: schoolsError },
+        { data: jobsData, error: jobsError }
+    ] = await Promise.all([schoolsPromise, jobsPromise]);
+
+
+    if(schoolsError) console.error("Error fetching schools:", schoolsError);
     if(jobsError) console.error("Error fetching jobs:", jobsError);
 
 

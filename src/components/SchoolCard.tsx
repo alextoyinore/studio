@@ -1,3 +1,4 @@
+
 import type { School } from '@/lib/types';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -11,7 +12,7 @@ type SchoolCardProps = {
 
 export function SchoolCard({ school }: SchoolCardProps) {
   return (
-    <Card className="overflow-hidden flex flex-col transition-all hover:shadow-lg hover:-translate-y-1">
+    <Card className="w-full overflow-hidden flex flex-col transition-all hover:shadow-lg hover:-translate-y-1">
         {school.image_url && (
             <div className="relative h-48 w-full">
                 <Image
