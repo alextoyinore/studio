@@ -1,4 +1,6 @@
+
 import Image from 'next/image';
+import { Mail, MapPin, Phone } from 'lucide-react';
 
 export default function AboutPage() {
   return (
@@ -37,7 +39,7 @@ export default function AboutPage() {
             </div>
         </section>
 
-        <section>
+        <section className="mb-12">
             <h2 className="font-headline text-3xl md:text-4xl font-bold mb-8 text-center">
                 What We Offer
             </h2>
@@ -56,7 +58,45 @@ export default function AboutPage() {
                 </div>
             </div>
         </section>
+
+        <section>
+            <h2 className="font-headline text-3xl md:text-4xl font-bold mb-8 text-center">
+                Visit or Contact Us
+            </h2>
+            <div className="bg-card p-8 rounded-lg shadow-sm">
+                <div className="grid md:grid-cols-3 gap-8">
+                    <div className="flex items-start gap-4">
+                        <div className="bg-accent/20 p-3 rounded-full">
+                            <MapPin className="h-6 w-6 text-accent" />
+                        </div>
+                        <div>
+                            <h3 className="font-semibold text-lg">Address</h3>
+                            <p className="text-muted-foreground">1, Tunji Idowu Street, Off Super B/Stop, Abule Egba, Lagos, Nigeria.</p>
+                        </div>
+                    </div>
+                     <div className="flex items-start gap-4">
+                         <div className="bg-accent/20 p-3 rounded-full">
+                            <Phone className="h-6 w-6 text-accent" />
+                        </div>
+                        <div>
+                            <h3 className="font-semibold text-lg">Phone</h3>
+                            <a href="tel:+2349015480337" className="text-muted-foreground hover:text-primary transition-colors">+234 901 548 0337</a>
+                        </div>
+                    </div>
+                     <div className="flex items-start gap-4">
+                         <div className="bg-accent/20 p-3 rounded-full">
+                            <Mail className="h-6 w-6 text-accent" />
+                        </div>
+                        <div>
+                            <h3 className="font-semibold text-lg">Email</h3>
+                            <a href="mailto:oceanictraveltour@gmail.com" className="text-muted-foreground hover:text-primary transition-colors">oceanictraveltour@gmail.com</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
       </div>
     </div>
   );
 }
+
