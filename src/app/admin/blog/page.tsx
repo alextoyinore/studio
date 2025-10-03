@@ -23,7 +23,7 @@ async function getBlogPosts(): Promise<BlogPostWithAuthor[]> {
   const supabase = createClient();
   const { data, error } = await supabase
     .from("blog_posts")
-    .select("*, author:profiles(email)")
+    .select("*, author:profiles!blog_posts_author_fkey(email)")
     .order("created_at", { ascending: false });
 
   if (error) {
