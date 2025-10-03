@@ -1,4 +1,5 @@
 
+
 import { createClient } from "@/lib/supabase/server";
 import type { BlogPost, Profile } from "@/lib/types";
 import { BlogCard } from "@/components/BlogCard";
@@ -69,3 +70,4 @@ export default async function BlogPage() {
     </div>
   );
 }
+
