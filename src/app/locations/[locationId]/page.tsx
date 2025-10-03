@@ -8,6 +8,7 @@ import { SchoolCard } from '@/components/SchoolCard';
 import { JobCard } from '@/components/JobCard';
 import { CheckCircle, Info } from 'lucide-react';
 import type { Location, School, Job } from '@/lib/types';
+import { Markdown } from '@/components/Markdown';
 
 type LocationPageParams = {
   params: {
@@ -70,30 +71,30 @@ export default async function LocationPage({ params }: LocationPageParams) {
 
   return (
     <div className="container mx-auto px-4 py-8 md:py-16">
-      <section className="mb-12">
-        <div className="relative h-64 md:h-96 w-full mb-8 rounded-lg overflow-hidden shadow-lg">
-          <Image
-            src={location.image_url}
-            alt={location.image_description}
-            data-ai-hint={location.image_hint}
-            fill
-            className="object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-        </div>
-        <div className="relative -mt-20 md:-mt-24 max-w-4xl mx-auto text-center z-10">
-          <h1 className="font-headline text-4xl md:text-6xl font-bold mb-2 tracking-tight text-white">
-            {location.name}
-          </h1>
-          <p className="text-lg md:text-xl text-slate-200 mt-4">
-            {location.description}
-          </p>
-        </div>
-      </section>
+      <article className="max-w-5xl mx-auto">
+        <header className="mb-12">
+          <div className="relative h-64 md:h-96 w-full mb-8 rounded-lg overflow-hidden shadow-lg">
+            <Image
+              src={location.image_url}
+              alt={location.image_description}
+              data-ai-hint={location.image_hint}
+              fill
+              className="object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+          </div>
+          <div className="relative -mt-20 md:-mt-24 max-w-4xl mx-auto text-center z-10 px-4">
+            <h1 className="font-headline text-4xl md:text-6xl font-bold mb-2 tracking-tight text-white">
+              {location.name}
+            </h1>
+            <p className="text-lg md:text-xl text-slate-200 mt-4 max-w-3xl mx-auto">
+              {location.description}
+            </p>
+          </div>
+        </header>
 
-      <div className="max-w-5xl mx-auto">
         {location.attractions && Array.isArray(location.attractions) && location.attractions.length > 0 && (
-            <section className="mb-12">
+            <section className="mb-16">
                 <h2 className="font-headline text-3xl md:text-4xl font-bold mb-8 text-center">
                     Top Attractions
                 </h2>
@@ -109,7 +110,7 @@ export default async function LocationPage({ params }: LocationPageParams) {
 
 
         {relatedSchools.length > 0 && (
-          <section className="mb-12">
+          <section className="mb-16">
             <h2 className="font-headline text-3xl md:text-4xl font-bold mb-8 text-center">
               Top Schools in {location.name.split(',')[0]}
             </h2>
@@ -122,7 +123,7 @@ export default async function LocationPage({ params }: LocationPageParams) {
         )}
 
         {relatedJobs.length > 0 && (
-          <section className="mb-12">
+          <section className="mb-16">
             <h2 className="font-headline text-3xl md:text-4xl font-bold mb-8 text-center">
               Job Opportunities
             </h2>
@@ -175,7 +176,7 @@ export default async function LocationPage({ params }: LocationPageParams) {
             </CardContent>
           </Card>
         </section>
-      </div>
+      </article>
     </div>
   );
 }
