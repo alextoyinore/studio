@@ -1,3 +1,4 @@
+
 "use server";
 
 import * as z from "zod";
@@ -7,7 +8,7 @@ const formSchema = z.object({
   jobId: z.string().uuid(),
   fullName: z.string().min(2, "Full name must be at least 2 characters."),
   email: z.string().email("Please enter a valid email address."),
-  phone: z.string().optional(),
+  phone: z.string().min(10, "Please enter a valid phone number."),
   coverLetter: z.string().min(20, "Cover letter must be at least 20 characters.").optional(),
   resumeUrl: z.string().min(1, "Please upload your resume or CV."),
   hasPassport: z.enum(["yes", "no"]),

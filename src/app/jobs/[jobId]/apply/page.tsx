@@ -30,7 +30,7 @@ const formSchema = z.object({
   jobId: z.string().uuid(),
   fullName: z.string().min(2, "Full name must be at least 2 characters."),
   email: z.string().email("Please enter a valid email address."),
-  phone: z.string().optional(),
+  phone: z.string().min(10, "Please enter a valid phone number."),
   coverLetter: z.string().min(20, "Cover letter must be at least 20 characters.").optional(),
   resumeUrl: z.string().min(1, "Please upload your resume or CV."),
   hasPassport: z.enum(["yes", "no"], { required_error: "Please select an option."}),
@@ -40,7 +40,7 @@ type ApplicationFormValues = z.infer<typeof formSchema>;
 
 // The params are a promise in client components, so we need to type it correctly
 type PageProps = {
-    params: Promise<{ jobId: string }>;
+    params: { jobId: string };
 }
 
 export default function JobApplicationPage({ params }: PageProps) {
@@ -158,7 +158,7 @@ export default function JobApplicationPage({ params }: PageProps) {
                 name="phone"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Phone Number (Optional)</FormLabel>
+                    <FormLabel>Phone Number</FormLabel>
                     <FormControl>
                       <Input placeholder="+1 (555) 123-4567" {...field} />
                     </FormControl>
