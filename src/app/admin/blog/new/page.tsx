@@ -29,6 +29,8 @@ const formSchema = z.object({
   content: z.string().min(20, "Content must be at least 20 characters."),
   author: z.string().min(2, "Author name must be at least 2 characters."),
   imageUrl: z.string().min(1, "Please upload an image for the cover."),
+  imageDescription: z.string().optional(),
+  imageHint: z.string().optional(),
   excerpt: z.string().min(10, "Excerpt must be at least 10 characters.").max(300, "Excerpt cannot exceed 300 characters."),
   category: z.string().min(3, "Please select a category."),
   tags: z.string().optional(),
@@ -47,6 +49,8 @@ export default function AddBlogPostPage() {
       content: "",
       author: "",
       imageUrl: "",
+      imageDescription: "",
+      imageHint: "",
       excerpt: "",
       category: "",
       tags: "",
@@ -191,6 +195,38 @@ export default function AddBlogPostPage() {
                     <FormControl>
                       <ImageUpload value={field.value} onChange={field.onChange} />
                     </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="imageDescription"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Image Description</FormLabel>
+                    <FormControl>
+                      <Input placeholder="e.g., A beautiful mountain range at sunset." {...field} />
+                    </FormControl>
+                    <FormDescription>
+                      This is used for image alt text (accessibility).
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="imageHint"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Image AI Hint</FormLabel>
+                    <FormControl>
+                      <Input placeholder="e.g., mountain sunset" {...field} />
+                    </FormControl>
+                    <FormDescription>
+                      Provide one or two keywords for AI image search if no image is uploaded.
+                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}

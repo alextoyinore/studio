@@ -78,6 +78,8 @@ export type BlogPost = {
   content: string;
   author: string;
   image_url: string;
+  image_description: string;
+  image_hint: string;
   excerpt: string;
   category: string;
   tags: string[];

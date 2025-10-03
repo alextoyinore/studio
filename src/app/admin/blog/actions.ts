@@ -9,6 +9,8 @@ const formSchema = z.object({
   content: z.string().min(20, "Content must be at least 20 characters."),
   author: z.string().min(2, "Author name must be at least 2 characters."),
   imageUrl: z.string().min(1, "Please upload an image."),
+  imageDescription: z.string().optional(),
+  imageHint: z.string().optional(),
   excerpt: z.string().min(10, "Excerpt must be at least 10 characters.").max(300, "Excerpt cannot exceed 300 characters."),
   category: z.string().min(3, "Please select a category."),
   tags: z.string().optional(),
@@ -23,7 +25,7 @@ export async function addBlogPost(data: BlogPostFormInput) {
     return { success: false, message: "Invalid data provided." };
   }
 
-  const { title, content, author, imageUrl, excerpt, category, tags } = parsedData.data;
+  const { title, content, author, imageUrl, imageDescription, imageHint, excerpt, category, tags } = parsedData.data;
 
   const supabase = createClient();
   
@@ -38,6 +40,8 @@ export async function addBlogPost(data: BlogPostFormInput) {
       content,
       author,
       image_url: imageUrl,
+      image_description: imageDescription,
+      image_hint: imageHint,
       excerpt,
       category,
       tags: tagsArray,
