@@ -5,24 +5,21 @@ import { BlogCard } from "@/components/BlogCard";
 import { BlogCardFeatured } from "@/components/BlogCardFeatured";
 
 type BlogPostWithAuthor = Omit<BlogPost, 'author'> & {
-    author: Profile | null;
+    profiles: Pick<Profile, 'email'> | null;
 }
 
 async function getBlogPosts(): Promise<BlogPostWithAuthor[]> {
   const supabase = createClient();
   const { data, error } = await supabase
     .from("blog_posts")
-    .select("*, author:profiles(email)")
+    .select("*, profiles(email)")
     .order("created_at", { ascending: false });
 
   if (error) {
     console.error("Error fetching blog posts:", error);
     return [];
   }
-  return data.map(post => ({
-      ...post,
-      author: post.author as Profile | null,
-  })) as BlogPostWithAuthor[];
+  return data as BlogPostWithAuthor[];
 }
 
 export default async function BlogPage() {

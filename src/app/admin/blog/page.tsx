@@ -16,14 +16,14 @@ import {
 import { format } from "date-fns";
 
 type BlogPostWithAuthor = Omit<BlogPost, 'author'> & {
-    author: Profile | null;
+    profiles: Pick<Profile, 'email'> | null;
 }
 
 async function getBlogPosts(): Promise<BlogPostWithAuthor[]> {
   const supabase = createClient();
   const { data, error } = await supabase
     .from("blog_posts")
-    .select("*, author:profiles(email)")
+    .select("*, profiles(email)")
     .order("created_at", { ascending: false });
 
   if (error) {
@@ -31,10 +31,7 @@ async function getBlogPosts(): Promise<BlogPostWithAuthor[]> {
     return [];
   }
   
-  return data.map(post => ({
-      ...post,
-      author: post.author as Profile | null,
-  })) as BlogPostWithAuthor[];
+  return data as BlogPostWithAuthor[];
 }
 
 
@@ -71,7 +68,7 @@ export default async function AdminBlogPage() {
                 posts.map((post) => (
                   <TableRow key={post.id}>
                     <TableCell className="font-medium">{post.title}</TableCell>
-                    <TableCell>{post.author?.email || 'N/A'}</TableCell>
+                    <TableCell>{post.profiles?.email || 'N/A'}</TableCell>
                     <TableCell>{post.category}</TableCell>
                     <TableCell className="text-right">
                       {format(new Date(post.created_at), "MMM d, yyyy")}

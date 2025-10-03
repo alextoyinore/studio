@@ -7,11 +7,11 @@ import { ArrowRight, Clock, UserCircle } from 'lucide-react';
 import { Badge } from './ui/badge';
 
 type BlogCardProps = {
-  post: BlogPost & { author: Profile | null };
+  post: Omit<BlogPost, 'author'> & { profiles: Pick<Profile, 'email'> | null };
 };
 
 export function BlogCard({ post }: BlogCardProps) {
-  const authorName = (typeof post.author === 'object' && post.author !== null) ? post.author.email : 'Anonymous';
+  const authorName = post.profiles?.email || 'Anonymous';
   
   return (
     <Card className="overflow-hidden flex flex-col group transition-all hover:shadow-lg hover:-translate-y-1">

@@ -8,14 +8,14 @@ import { Markdown } from "@/components/Markdown";
 import type { BlogPost, Profile } from "@/lib/types";
 
 type BlogPostWithAuthor = Omit<BlogPost, 'author'> & {
-    author: Profile | null;
+    profiles: Pick<Profile, 'email'> | null;
 }
 
 async function getPost(slug: string): Promise<BlogPostWithAuthor | null> {
   const supabase = createClient();
   const { data, error } = await supabase
     .from("blog_posts")
-    .select("*, author:profiles(email)")
+    .select("*, profiles(email)")
     .eq("slug", slug)
     .single();
 
@@ -24,10 +24,7 @@ async function getPost(slug: string): Promise<BlogPostWithAuthor | null> {
     return null;
   }
   
-  return {
-    ...data,
-    author: data.author as Profile | null,
-  } as BlogPostWithAuthor;
+  return data as BlogPostWithAuthor;
 }
 
 export default async function BlogPostPage({ params }: { params: { slug: string } }) {
@@ -37,7 +34,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
     notFound();
   }
 
-  const authorName = post.author?.email || 'Anonymous';
+  const authorName = post.profiles?.email || 'Anonymous';
 
   return (
     <div className="container mx-auto py-8 md:py-16">
