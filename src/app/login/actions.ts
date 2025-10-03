@@ -4,6 +4,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import * as z from "zod";
+import { cookies } from "next/headers";
 
 const loginSchema = z.object({
   email: z.string().email(),
@@ -20,7 +21,9 @@ export async function login(data: LoginFormInput) {
   }
 
   const { email, password } = parsedData.data;
-  const supabase = createClient();
+  
+  const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
 
   const { error } = await supabase.auth.signInWithPassword({
     email,
@@ -31,6 +34,7 @@ export async function login(data: LoginFormInput) {
     return { success: false, message: error.message };
   }
 
+  revalidatePath("/", "layout");
   redirect("/admin");
 }
 
@@ -42,7 +46,9 @@ export async function signup(data: LoginFormInput) {
     }
 
     const { email, password } = parsedData.data;
-    const supabase = createClient();
+    
+    const cookieStore = cookies();
+    const supabase = createClient(cookieStore);
 
     const { error } = await supabase.auth.signUp({
         email,
@@ -57,7 +63,8 @@ export async function signup(data: LoginFormInput) {
 }
 
 export async function logout() {
-    const supabase = createClient();
+    const cookieStore = cookies();
+    const supabase = createClient(cookieStore);
     await supabase.auth.signOut();
     redirect('/login');
 }

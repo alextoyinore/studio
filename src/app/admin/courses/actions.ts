@@ -3,6 +3,7 @@
 import { createClient } from "@/lib/supabase/server";
 import * as z from "zod";
 import { revalidatePath } from "next/cache";
+import { cookies } from "next/headers";
 
 const formSchema = z.object({
   title: z.string().min(3, "Title must be at least 3 characters."),
@@ -22,7 +23,8 @@ export async function addCourse(data: CourseFormInput) {
     return { success: false, message: "Invalid data provided." };
   }
 
-  const supabase = createClient();
+  const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
   
   const { title, schoolId, duration, description, enrollUrl, travelType } = parsedData.data;
 

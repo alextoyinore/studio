@@ -3,6 +3,7 @@
 import { createClient } from "@/lib/supabase/server";
 import * as z from "zod";
 import { revalidatePath } from "next/cache";
+import { cookies } from "next/headers";
 
 const formSchema = z.object({
   title: z.string().min(5, "Title must be at least 5 characters."),
@@ -27,7 +28,8 @@ export async function addBlogPost(data: BlogPostFormInput) {
 
   const { title, content, author, imageUrl, imageDescription, imageHint, excerpt, category, tags } = parsedData.data;
 
-  const supabase = createClient();
+  const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
   
   // Create a slug from the title
   const slug = title.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '');

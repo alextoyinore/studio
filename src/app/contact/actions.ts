@@ -2,6 +2,7 @@
 
 import * as z from "zod";
 import { createClient } from "@/lib/supabase/server";
+import { cookies } from "next/headers";
 
 const formSchema = z.object({
   name: z.string().min(2),
@@ -19,7 +20,8 @@ export async function submitContactForm(data: ContactFormInput) {
     return { success: false, message: "Invalid data provided." };
   }
 
-  const supabase = createClient();
+  const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
 
   const { error } = await supabase.from("contacts").insert([parsedData.data]);
 

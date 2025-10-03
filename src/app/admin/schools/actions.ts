@@ -3,6 +3,7 @@
 import { createClient } from "@/lib/supabase/server";
 import * as z from "zod";
 import { revalidatePath } from "next/cache";
+import { cookies } from "next/headers";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters."),
@@ -25,7 +26,8 @@ export async function addSchool(data: SchoolFormInput) {
 
   const { name, location, country, description, imageUrl, imageDescription, imageHint } = parsedData.data;
 
-  const supabase = createClient();
+  const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
   
   const { error } = await supabase.from("schools").insert([
     {

@@ -3,6 +3,7 @@
 import { createClient } from "@/lib/supabase/server";
 import * as z from "zod";
 import { revalidatePath } from "next/cache";
+import { cookies } from "next/headers";
 
 const formSchema = z.object({
   name: z.string().min(2),
@@ -24,7 +25,8 @@ export async function addLocation(data: LocationFormInput) {
 
   const { name, description, imageUrl, imageDescription, imageHint, attractions } = parsedData.data;
 
-  const supabase = createClient();
+  const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
   
   // Split attractions string into an array
   const attractionsArray = attractions.split(',').map(item => item.trim()).filter(Boolean);
