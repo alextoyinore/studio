@@ -1,3 +1,4 @@
+
 import type { Job } from '@/lib/types';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -24,6 +25,7 @@ export function JobCard({ job }: JobCardProps) {
   return (
     <Card className="flex flex-col transition-all hover:shadow-lg hover:-translate-y-1 overflow-hidden">
       <div className="relative h-40 w-full">
+        <Link href={`/jobs/${job.id}`}>
           <Image
             src={imageUrl}
             alt={imageDescription}
@@ -31,9 +33,12 @@ export function JobCard({ job }: JobCardProps) {
             fill
             className="object-cover"
           />
+        </Link>
       </div>
       <CardHeader>
-        <CardTitle className="font-headline text-xl">{job.title}</CardTitle>
+        <CardTitle className="font-headline text-xl">
+            <Link href={`/jobs/${job.id}`}>{job.title}</Link>
+        </CardTitle>
         <CardDescription>{job.company}</CardDescription>
       </CardHeader>
       <CardContent className="flex-grow space-y-4">
