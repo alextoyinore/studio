@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from "react";
@@ -41,12 +42,23 @@ export default function JobApplicationPage({ params }: { params: { jobId: string
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [job, setJob] = useState<Job | null>(null);
-  const { jobId } = params;
+
+  const form = useForm<ApplicationFormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      jobId: params.jobId,
+      fullName: "",
+      email: "",
+      phone: "",
+      coverLetter: "",
+      resumeUrl: "",
+    },
+  });
 
   useEffect(() => {
     async function fetchJob() {
       const supabase = createClient();
-      const { data, error } = await supabase.from('jobs').select('*').eq('id', jobId).single();
+      const { data, error } = await supabase.from('jobs').select('*').eq('id', params.jobId).single();
       if (error) {
         console.error("Error fetching job details", error);
         toast({
@@ -58,19 +70,7 @@ export default function JobApplicationPage({ params }: { params: { jobId: string
       }
     }
     fetchJob();
-  }, [jobId, toast]);
-
-  const form = useForm<ApplicationFormValues>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      jobId: jobId,
-      fullName: "",
-      email: "",
-      phone: "",
-      coverLetter: "",
-      resumeUrl: "",
-    },
-  });
+  }, [params.jobId, toast]);
 
   async function onSubmit(values: ApplicationFormValues) {
     setIsSubmitting(true);
