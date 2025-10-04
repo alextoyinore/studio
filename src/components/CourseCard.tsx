@@ -36,7 +36,7 @@ export function CourseCard({ course, school }: CourseCardProps) {
           <Clock className="h-4 w-4 mr-2 text-accent" />
           {course.duration}
         </div>
-        <div className="text-sm text-foreground/90 line-clamp-3">
+        <div className="text-sm text-foreground/90 line-clamp-3 min-h-[4rem]">
             <Markdown content={course.description} />
         </div>
         <div className="flex flex-wrap gap-2">
