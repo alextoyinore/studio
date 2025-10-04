@@ -2,6 +2,7 @@
 
 
 
+
 import { createClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
 import Image from "next/image";
@@ -69,7 +70,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
 
         <Markdown content={post.content} />
 
-        {post.tags && post.tags.length > 0 && (
+        {post.tags && Array.isArray(post.tags) && post.tags.length > 0 && (
           <footer className="mt-12 pt-8 border-t">
             <h3 className="text-lg font-semibold mb-4">Tags</h3>
             <div className="flex flex-wrap gap-2">
