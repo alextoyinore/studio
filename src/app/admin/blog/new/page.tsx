@@ -26,7 +26,6 @@ import { addBlogPost } from "../actions";
 import { ImageUpload } from "@/components/ImageUpload";
 import { createClient } from "@/lib/supabase/client";
 import type { User } from "@supabase/supabase-js";
-import { AlertDialog, AlertDialogAction, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 
 const formSchema = z.object({
   title: z.string().min(5, "Title must be at least 5 characters."),
@@ -46,7 +45,6 @@ export default function AddBlogPostPage() {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [user, setUser] = useState<User | null>(null);
-  const [supabaseError, setSupabaseError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -94,37 +92,16 @@ export default function AddBlogPostPage() {
         form.setValue("authorName", user.user_metadata.display_name);
       }
     } else {
-      if (result.error) {
-        setSupabaseError(result.error);
-      } else {
         toast({
           variant: "destructive",
           title: "Uh oh! Something went wrong.",
           description: result.message || "There was a problem saving the post.",
         });
-      }
     }
   }
 
   return (
     <div>
-      <AlertDialog open={!!supabaseError} onOpenChange={(open) => !open && setSupabaseError(null)}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Supabase Error</AlertDialogTitle>
-            <AlertDialogDescription>
-              The following error was returned from Supabase:
-              <pre className="mt-2 w-full rounded-md bg-muted p-4 overflow-auto text-sm">
-                <code>{supabaseError}</code>
-              </pre>
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogAction onClick={() => setSupabaseError(null)}>Close</AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-
       <div className="flex items-center gap-4 mb-6">
         <Button asChild variant="outline" size="icon">
             <Link href="/admin/blog">
