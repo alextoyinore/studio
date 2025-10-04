@@ -1,6 +1,14 @@
 import { cn } from '@/lib/utils';
-import LogoSvg from '@/assets/logo.svg';
+import Image from 'next/image';
+import LogoSrc from '@/assets/logo.svg';
 
 export function Logo({ className }: { className?: string }) {
-  return <LogoSvg className={cn('h-8 w-auto', className)} />;
+  return (
+    <Image
+      src={LogoSrc}
+      alt="Oceanic Agency Logo"
+      className={cn('h-8 w-auto', className)}
+      unoptimized
+    />
+  );
 }

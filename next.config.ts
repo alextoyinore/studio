@@ -37,11 +37,7 @@ const nextConfig: NextConfig = {
     ],
   },
    webpack: (config, {isServer}) => {
-    config.module.rules.push({
-      test: /\.svg$/,
-      use: ["@svgr/webpack"]
-    });
-    
+    // Keep the existing fs: false for client-side builds
     if (!isServer) {
         config.resolve.fallback = {
             ...config.resolve.fallback,
@@ -49,6 +45,7 @@ const nextConfig: NextConfig = {
         };
     }
 
+    // Return the modified config
     return config;
   }
 };
