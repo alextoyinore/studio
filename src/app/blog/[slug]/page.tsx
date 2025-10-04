@@ -1,3 +1,4 @@
+
 import { createClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
 import Image from "next/image";
@@ -85,3 +86,5 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
     </div>
   );
 }
+
+    
