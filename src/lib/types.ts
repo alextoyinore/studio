@@ -1,5 +1,6 @@
 
 
+
 import type { ImagePlaceholder } from './placeholder-images';
 
 export type TravelType = 'work' | 'student' | 'vacation';
@@ -82,7 +83,8 @@ export type BlogPost = {
   title: string;
   slug: string;
   content: string;
-  author: string | Profile; // Will be profile object when fetched with relation
+  author: string; 
+  author_email?: string;
   image_url: string;
   image_description: string;
   image_hint: string;

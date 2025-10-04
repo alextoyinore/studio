@@ -1,5 +1,5 @@
 
-import { createClient as createAdminClient } from '@supabase/supabase-js'
+
 import { createClient } from "@/lib/supabase/server";
 import type { BlogPost } from "@/lib/types";
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
@@ -16,67 +16,25 @@ import {
 } from "@/components/ui/table";
 import { format } from "date-fns";
 
-type BlogPostWithAuthorEmail = BlogPost & {
-    author_email: string | null;
-}
-
-async function getBlogPostsWithAuthors(): Promise<BlogPostWithAuthorEmail[]> {
-    // A client for public-facing queries
+async function getBlogPosts(): Promise<BlogPost[]> {
     const supabase = createClient();
     
-    const { data: posts, error: postsError } = await supabase
+    const { data: posts, error } = await supabase
         .from("blog_posts")
         .select("*")
         .order("created_at", { ascending: false });
 
-    if (postsError) {
-        console.error("Error fetching blog posts:", postsError);
+    if (error) {
+        console.error("Error fetching blog posts:", error);
         return [];
     }
 
-    const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-    if (!serviceKey) {
-        console.warn("SUPABASE_SERVICE_ROLE_KEY is not set. Author emails will not be displayed.");
-        return posts.map(post => ({
-            ...post,
-            author_email: 'N/A',
-        })) as BlogPostWithAuthorEmail[];
-    }
-    
-    // A secure, admin-only client for fetching user data
-    const supabaseAdmin = createAdminClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        serviceKey,
-        { auth: { autoRefreshToken: false, persistSession: false } }
-    );
-
-    const { data: usersData, error: usersError } = await supabaseAdmin.auth.admin.listUsers();
-    
-    if (usersError) {
-        console.error("Error fetching users:", usersError);
-        // If we can't get users, we can still show posts, just without author emails.
-    }
-
-    // Create a map of user IDs to emails for easy lookup
-    const userEmailMap = new Map<string, string>();
-    if (usersData?.users) {
-        for (const user of usersData.users) {
-            userEmailMap.set(user.id, user.email || 'N/A');
-        }
-    }
-
-    // Combine posts with author emails
-    const postsWithAuthors = posts.map(post => ({
-        ...post,
-        author_email: userEmailMap.get(post.author as string) || 'N/A',
-    }));
-
-    return postsWithAuthors as BlogPostWithAuthorEmail[];
+    return posts as BlogPost[];
 }
 
 
 export default async function AdminBlogPage() {
-  const posts = await getBlogPostsWithAuthors();
+  const posts = await getBlogPosts();
   
   return (
     <div>

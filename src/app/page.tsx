@@ -1,10 +1,11 @@
 
+
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { AnimatedText } from '@/components/AnimatedText';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Plane, Briefcase, HomeIcon, School, FileText, ArrowRight, Quote } from 'lucide-react';
-import type { Job, School as SchoolType, BlogPost, Location, Profile } from '@/lib/types';
+import type { Job, School as SchoolType, BlogPost, Location } from '@/lib/types';
 import { JobCard } from '@/components/JobCard';
 import { SchoolCard } from '@/components/SchoolCard';
 import { BlogCard } from '@/components/BlogCard';
@@ -73,10 +74,6 @@ const testimonials = [
     }
 ]
 
-type BlogPostWithAuthor = Omit<BlogPost, 'author'> & {
-    profiles: Pick<Profile, 'email'> | null;
-}
-
 async function getFeaturedData() {
     const supabase = createClient();
     
@@ -100,7 +97,7 @@ async function getFeaturedData() {
     return {
         jobs: (jobs || []) as Job[],
         schools: (schools || []) as SchoolType[],
-        blogPosts: (blogPosts || []) as BlogPostWithAuthor[],
+        blogPosts: (blogPosts || []) as BlogPost[],
         locations: (locations || []) as Location[]
     }
 }

@@ -24,7 +24,7 @@ export async function addBlogPost(data: BlogPostFormInput) {
   const supabase = createClient(cookieStore);
 
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user) {
+  if (!user || !user.email) {
     return { success: false, message: "Authentication error: User not found." };
   }
 
@@ -46,6 +46,7 @@ export async function addBlogPost(data: BlogPostFormInput) {
       slug,
       content,
       author: user.id,
+      author_email: user.email,
       image_url: imageUrl,
       image_description: imageDescription,
       image_hint: imageHint,
@@ -59,12 +60,13 @@ export async function addBlogPost(data: BlogPostFormInput) {
     console.error("Error saving blog post:", error);
     return {
       success: false,
-      message: "There was an error saving the post. Please ensure the 'author' column in 'blog_posts' is of type UUID.",
+      message: "There was an error saving the post. Please ensure the `blog_posts` table has an `author_email` text column.",
     };
   }
 
   revalidatePath("/admin/blog");
   revalidatePath("/blog"); // Revalidate public-facing blog page if it exists
+  revalidatePath("/"); // Revalidate homepage for featured posts
 
   return { success: true, message: "Blog post created successfully." };
 }

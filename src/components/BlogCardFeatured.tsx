@@ -1,5 +1,6 @@
 
-import type { BlogPost, Profile } from '@/lib/types';
+
+import type { BlogPost } from '@/lib/types';
 import Image from 'next/image';
 import Link from 'next/link';
 import { format } from 'date-fns';
@@ -7,11 +8,11 @@ import { ArrowRight } from 'lucide-react';
 import { Badge } from './ui/badge';
 
 type BlogCardFeaturedProps = {
-  post: Omit<BlogPost, 'author'> & { profiles?: Pick<Profile, 'email'> | null };
+  post: BlogPost;
 };
 
 export function BlogCardFeatured({ post }: BlogCardFeaturedProps) {
-  const authorName = post.profiles?.email || 'Anonymous';
+  const authorName = post.author_email || 'Anonymous';
 
   return (
     <div className="relative rounded-lg overflow-hidden group shadow-lg">

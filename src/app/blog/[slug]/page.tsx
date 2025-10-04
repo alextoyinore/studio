@@ -1,4 +1,5 @@
 
+
 import { createClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
 import Image from "next/image";
@@ -6,13 +7,9 @@ import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 import { Clock, UserCircle } from "lucide-react";
 import { Markdown } from "@/components/Markdown";
-import type { BlogPost, Profile } from "@/lib/types";
+import type { BlogPost } from "@/lib/types";
 
-type BlogPostWithAuthor = Omit<BlogPost, 'author'> & {
-    profiles: Pick<Profile, 'email'> | null;
-}
-
-async function getPost(slug: string): Promise<BlogPostWithAuthor | null> {
+async function getPost(slug: string): Promise<BlogPost | null> {
   const supabase = createClient();
   const { data, error } = await supabase
     .from("blog_posts")
@@ -25,7 +22,7 @@ async function getPost(slug: string): Promise<BlogPostWithAuthor | null> {
     return null;
   }
   
-  return data as BlogPostWithAuthor;
+  return data as BlogPost;
 }
 
 export default async function BlogPostPage({ params }: { params: { slug: string } }) {
@@ -35,7 +32,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
     notFound();
   }
 
-  const authorName = post.profiles?.email || 'Anonymous';
+  const authorName = post.author_email || 'Anonymous';
 
   return (
     <div className="container mx-auto py-8 md:py-16">

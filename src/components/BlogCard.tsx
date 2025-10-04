@@ -1,5 +1,6 @@
 
-import type { BlogPost, Profile } from '@/lib/types';
+
+import type { BlogPost } from '@/lib/types';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -8,11 +9,11 @@ import { ArrowRight, Clock, UserCircle } from 'lucide-react';
 import { Badge } from './ui/badge';
 
 type BlogCardProps = {
-  post: Omit<BlogPost, 'author'> & { profiles?: Pick<Profile, 'email'> | null };
+  post: BlogPost;
 };
 
 export function BlogCard({ post }: BlogCardProps) {
-  const authorName = post.profiles?.email || 'Anonymous';
+  const authorName = post.author_email || 'Anonymous';
   
   return (
     <Card className="overflow-hidden flex flex-col group transition-all hover:shadow-lg hover:-translate-y-1">
