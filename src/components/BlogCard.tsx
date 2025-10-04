@@ -1,3 +1,4 @@
+
 import type { BlogPost, Profile } from '@/lib/types';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import Image from 'next/image';
@@ -7,7 +8,7 @@ import { ArrowRight, Clock, UserCircle } from 'lucide-react';
 import { Badge } from './ui/badge';
 
 type BlogCardProps = {
-  post: Omit<BlogPost, 'author'> & { profiles: Pick<Profile, 'email'> | null };
+  post: Omit<BlogPost, 'author'> & { profiles?: Pick<Profile, 'email'> | null };
 };
 
 export function BlogCard({ post }: BlogCardProps) {
@@ -47,3 +48,5 @@ export function BlogCard({ post }: BlogCardProps) {
     </Card>
   );
 }
+
+    

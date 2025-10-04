@@ -1,3 +1,4 @@
+
 import type { BlogPost, Profile } from '@/lib/types';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -6,7 +7,7 @@ import { ArrowRight } from 'lucide-react';
 import { Badge } from './ui/badge';
 
 type BlogCardFeaturedProps = {
-  post: Omit<BlogPost, 'author'> & { profiles: Pick<Profile, 'email'> | null };
+  post: Omit<BlogPost, 'author'> & { profiles?: Pick<Profile, 'email'> | null };
 };
 
 export function BlogCardFeatured({ post }: BlogCardFeaturedProps) {
@@ -38,3 +39,5 @@ export function BlogCardFeatured({ post }: BlogCardFeaturedProps) {
     </div>
   );
 }
+
+    

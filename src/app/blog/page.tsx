@@ -13,7 +13,7 @@ async function getBlogPosts(): Promise<BlogPostWithAuthor[]> {
   const supabase = createClient();
   const { data, error } = await supabase
     .from("blog_posts")
-    .select("*, profiles(email)")
+    .select("*")
     .order("created_at", { ascending: false });
 
   if (error) {
@@ -70,5 +70,5 @@ export default async function BlogPage() {
     </div>
   );
 }
-
+    
     

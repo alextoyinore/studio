@@ -82,7 +82,7 @@ async function getFeaturedData() {
     
     const jobsPromise = supabase.from('jobs').select('*').limit(3).order('created_at', { ascending: false });
     const schoolsPromise = supabase.from('schools').select('*, courses(*)').limit(3).order('created_at', { ascending: false });
-    const blogPromise = supabase.from('blog_posts').select('*, profiles(email)').limit(3).order('created_at', { ascending: false });
+    const blogPromise = supabase.from('blog_posts').select('*').limit(3).order('created_at', { ascending: false });
     const locationsPromise = supabase.from('locations').select('*').limit(3).order('created_at', { ascending: false });
 
     const [
@@ -244,4 +244,5 @@ export default async function Home() {
   );
 }
 
+    
     

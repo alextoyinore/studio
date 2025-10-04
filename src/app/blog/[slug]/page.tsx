@@ -16,7 +16,7 @@ async function getPost(slug: string): Promise<BlogPostWithAuthor | null> {
   const supabase = createClient();
   const { data, error } = await supabase
     .from("blog_posts")
-    .select("*, profiles(email)")
+    .select("*")
     .eq("slug", slug)
     .single();
 
@@ -86,5 +86,5 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
     </div>
   );
 }
-
+    
     
