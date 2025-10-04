@@ -40,7 +40,7 @@ export function CourseCard({ course, school }: CourseCardProps) {
             <Markdown content={course.description} />
         </div>
         <div className="flex flex-wrap gap-2">
-            {course.travel_type.map(type => (
+            {Array.isArray(course.travel_type) && course.travel_type.map(type => (
                 <Badge key={type} variant="secondary">{type}</Badge>
             ))}
         </div>

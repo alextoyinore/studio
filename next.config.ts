@@ -36,18 +36,6 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-   webpack: (config, {isServer}) => {
-    // Keep the existing fs: false for client-side builds
-    if (!isServer) {
-        config.resolve.fallback = {
-            ...config.resolve.fallback,
-            fs: false,
-        };
-    }
-
-    // Return the modified config
-    return config;
-  }
 };
 
 export default nextConfig;
