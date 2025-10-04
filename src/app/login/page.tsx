@@ -11,6 +11,7 @@ import {
   FormControl,
   FormField,
   FormItem,
+  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -48,7 +49,6 @@ export default function LoginPage() {
     },
   });
   
-  // This effect will re-validate the form when the user toggles between sign up and login
   useEffect(() => {
     form.trigger();
   }, [isSignUp, form]);
@@ -103,6 +103,7 @@ export default function LoginPage() {
                   name="name"
                   render={({ field }) => (
                     <FormItem>
+                      <FormLabel className="text-muted-foreground">Full Name</FormLabel>
                       <FormControl>
                         <Input placeholder="Full Name" {...field} />
                       </FormControl>
@@ -116,6 +117,7 @@ export default function LoginPage() {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
+                    <FormLabel className="text-muted-foreground">Email</FormLabel>
                     <FormControl>
                       <Input placeholder="Email Address" {...field} />
                     </FormControl>
@@ -128,6 +130,7 @@ export default function LoginPage() {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
+                    <FormLabel className="text-muted-foreground">Password</FormLabel>
                     <FormControl>
                       <Input type="password" placeholder="Password" {...field} />
                     </FormControl>
