@@ -1,6 +1,7 @@
 
 
 
+
 import type { ImagePlaceholder } from './placeholder-images';
 
 export type TravelType = 'work' | 'student' | 'vacation';
@@ -85,6 +86,7 @@ export type BlogPost = {
   content: string;
   author: string; 
   author_email?: string;
+  author_name?: string;
   image_url: string;
   image_description: string;
   image_hint: string;

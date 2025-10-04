@@ -15,6 +15,7 @@ const formSchema = z.object({
   excerpt: z.string().min(10, "Excerpt must be at least 10 characters.").max(300, "Excerpt cannot exceed 300 characters."),
   category: z.string().min(3, "Please select a category."),
   tags: z.string().optional(),
+  authorName: z.string().optional(),
 });
 
 type BlogPostFormInput = z.infer<typeof formSchema>;
@@ -24,9 +25,6 @@ export async function addBlogPost(data: BlogPostFormInput) {
   const supabase = createClient(cookieStore);
 
   const { data: { user } } = await supabase.auth.getUser();
-  if (!user || !user.email) {
-    return { success: false, message: "Authentication error: User not found." };
-  }
 
   const parsedData = formSchema.safeParse(data);
 
@@ -34,33 +32,40 @@ export async function addBlogPost(data: BlogPostFormInput) {
     return { success: false, message: "Invalid data provided." };
   }
 
-  const { title, content, imageUrl, imageDescription, imageHint, excerpt, category, tags } = parsedData.data;
+  const { title, content, imageUrl, imageDescription, imageHint, excerpt, category, tags, authorName } = parsedData.data;
+  
+  if (!user && !authorName) {
+      return { success: false, message: "Authentication error: User not found and no author name provided." };
+  }
+
 
   // Create a slug from the title
   const slug = title.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '');
   const tagsArray = tags?.split(',').map(tag => tag.trim()).filter(Boolean) || [];
 
-  const { error } = await supabase.from("blog_posts").insert([
-    {
+  const postData = {
       title,
       slug,
       content,
-      author: user.id,
-      author_email: user.email,
+      author: user?.id || '00000000-0000-0000-0000-000000000000', // Use a placeholder UUID if no user
+      author_email: user?.email,
+      author_name: user?.user_metadata?.display_name || authorName,
       image_url: imageUrl,
       image_description: imageDescription,
       image_hint: imageHint,
       excerpt,
       category,
       tags: tagsArray,
-    },
-  ]);
+  };
+
+
+  const { error } = await supabase.from("blog_posts").insert([postData]);
 
   if (error) {
     console.error("Error saving blog post:", error);
     return {
       success: false,
-      message: "There was an error saving the post. Please ensure the `blog_posts` table has an `author_email` text column.",
+      message: "There was an error saving the post. Please ensure the table structure is correct.",
     };
   }
 

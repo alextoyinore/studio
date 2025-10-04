@@ -1,5 +1,6 @@
 
 
+
 import type { BlogPost } from '@/lib/types';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import Image from 'next/image';
@@ -13,7 +14,7 @@ type BlogCardProps = {
 };
 
 export function BlogCard({ post }: BlogCardProps) {
-  const authorName = post.author_email || 'Anonymous';
+  const authorName = post.author_name || post.author_email || 'Anonymous';
   
   return (
     <Card className="overflow-hidden flex flex-col group transition-all hover:shadow-lg hover:-translate-y-1">

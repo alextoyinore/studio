@@ -1,5 +1,6 @@
 
 
+
 import { createClient } from "@/lib/supabase/server";
 import type { BlogPost } from "@/lib/types";
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
@@ -66,7 +67,7 @@ export default async function AdminBlogPage() {
                 posts.map((post) => (
                   <TableRow key={post.id}>
                     <TableCell className="font-medium">{post.title}</TableCell>
-                    <TableCell>{post.author_email || 'N/A'}</TableCell>
+                    <TableCell>{post.author_name || post.author_email || 'N/A'}</TableCell>
                     <TableCell>{post.category}</TableCell>
                     <TableCell className="text-right">
                       {format(new Date(post.created_at), "MMM d, yyyy")}

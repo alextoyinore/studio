@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -33,6 +34,7 @@ const formSchema = z.object({
   excerpt: z.string().min(10, "Excerpt must be at least 10 characters.").max(300, "Excerpt cannot exceed 300 characters."),
   category: z.string().min(3, "Please select a category."),
   tags: z.string().optional(),
+  authorName: z.string().optional(),
 });
 
 type BlogPostFormValues = z.infer<typeof formSchema>;
@@ -52,6 +54,7 @@ export default function AddBlogPostPage() {
       excerpt: "",
       category: "",
       tags: "",
+      authorName: "",
     },
   });
 
@@ -167,6 +170,22 @@ export default function AddBlogPostPage() {
                     </FormControl>
                     <FormDescription>
                       Comma-separated list of tags.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+               <FormField
+                control={form.control}
+                name="authorName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Author Name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="e.g., Jane Doe" {...field} />
+                    </FormControl>
+                    <FormDescription>
+                      Provide an author name if the logged-in user is unavailable.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
