@@ -1,6 +1,7 @@
 
 
 
+
 import type { BlogPost } from '@/lib/types';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -13,7 +14,7 @@ type BlogCardFeaturedProps = {
 };
 
 export function BlogCardFeatured({ post }: BlogCardFeaturedProps) {
-  const authorName = post.author_name || post.author_email || 'Anonymous';
+  const authorName = post.author_name || 'Anonymous';
 
   return (
     <div className="relative rounded-lg overflow-hidden group shadow-lg">

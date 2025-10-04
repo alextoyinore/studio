@@ -1,6 +1,7 @@
 
 
 
+
 import { createClient } from "@/lib/supabase/server";
 import { notFound } from "next/navigation";
 import Image from "next/image";
@@ -33,7 +34,7 @@ export default async function BlogPostPage({ params }: { params: { slug: string 
     notFound();
   }
 
-  const authorName = post.author_name || post.author_email || 'Anonymous';
+  const authorName = post.author_name || 'Anonymous';
 
   return (
     <div className="container mx-auto py-8 md:py-16">

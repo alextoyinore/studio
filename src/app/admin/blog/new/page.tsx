@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -24,6 +24,8 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { addBlogPost } from "../actions";
 import { ImageUpload } from "@/components/ImageUpload";
+import { createClient } from "@/lib/supabase/client";
+import type { User } from "@supabase/supabase-js";
 
 const formSchema = z.object({
   title: z.string().min(5, "Title must be at least 5 characters."),
@@ -34,7 +36,7 @@ const formSchema = z.object({
   excerpt: z.string().min(10, "Excerpt must be at least 10 characters.").max(300, "Excerpt cannot exceed 300 characters."),
   category: z.string().min(3, "Please select a category."),
   tags: z.string().optional(),
-  authorName: z.string().optional(),
+  authorName: z.string().min(1, "Author name is required."),
 });
 
 type BlogPostFormValues = z.infer<typeof formSchema>;
@@ -42,6 +44,16 @@ type BlogPostFormValues = z.infer<typeof formSchema>;
 export default function AddBlogPostPage() {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      setUser(user);
+    };
+    fetchUser();
+  }, []);
 
   const form = useForm<BlogPostFormValues>({
     resolver: zodResolver(formSchema),
@@ -58,6 +70,13 @@ export default function AddBlogPostPage() {
     },
   });
 
+  useEffect(() => {
+    if (user?.user_metadata?.display_name) {
+      form.setValue("authorName", user.user_metadata.display_name);
+    }
+  }, [user, form]);
+
+
   async function onSubmit(values: BlogPostFormValues) {
     setIsSubmitting(true);
     const result = await addBlogPost(values);
@@ -69,6 +88,9 @@ export default function AddBlogPostPage() {
         description: "Your new blog post has been saved successfully.",
       });
       form.reset();
+       if (user?.user_metadata?.display_name) {
+        form.setValue("authorName", user.user_metadata.display_name);
+      }
     } else {
       toast({
         variant: "destructive",
@@ -185,7 +207,7 @@ export default function AddBlogPostPage() {
                       <Input placeholder="e.g., Jane Doe" {...field} />
                     </FormControl>
                     <FormDescription>
-                      Provide an author name if the logged-in user is unavailable.
+                      The author's name will be pre-filled if you are logged in.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>

@@ -15,7 +15,7 @@ const formSchema = z.object({
   excerpt: z.string().min(10, "Excerpt must be at least 10 characters.").max(300, "Excerpt cannot exceed 300 characters."),
   category: z.string().min(3, "Please select a category."),
   tags: z.string().optional(),
-  authorName: z.string().optional(),
+  authorName: z.string().min(1, "Author name is required."),
 });
 
 type BlogPostFormInput = z.infer<typeof formSchema>;
@@ -24,8 +24,6 @@ export async function addBlogPost(data: BlogPostFormInput) {
   const cookieStore = cookies();
   const supabase = createClient(cookieStore);
 
-  const { data: { user } } = await supabase.auth.getUser();
-
   const parsedData = formSchema.safeParse(data);
 
   if (!parsedData.success) {
@@ -33,11 +31,6 @@ export async function addBlogPost(data: BlogPostFormInput) {
   }
 
   const { title, content, imageUrl, imageDescription, imageHint, excerpt, category, tags, authorName } = parsedData.data;
-  
-  if (!user && !authorName) {
-      return { success: false, message: "Authentication error: User not found and no author name provided." };
-  }
-
 
   // Create a slug from the title
   const slug = title.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '');
@@ -47,9 +40,7 @@ export async function addBlogPost(data: BlogPostFormInput) {
       title,
       slug,
       content,
-      author: user?.id || '00000000-0000-0000-0000-000000000000', // Use a placeholder UUID if no user
-      author_email: user?.email,
-      author_name: user?.user_metadata?.display_name || authorName,
+      author_name: authorName,
       image_url: imageUrl,
       image_description: imageDescription,
       image_hint: imageHint,
