@@ -1,3 +1,4 @@
+
 import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { SidebarProvider, Sidebar, SidebarHeader, SidebarContent, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarFooter, SidebarTrigger } from '@/components/ui/sidebar';
@@ -60,8 +61,9 @@ export default async function AdminLayout({
       <SidebarProvider>
         <div className="flex w-full h-screen">
             <Sidebar>
-                <SidebarHeader>
-                    <h2 className="text-xl font-bold p-2">Admin Panel</h2>
+                <SidebarHeader className="flex items-center gap-4 p-2">
+                    <SidebarTrigger className="md:hidden" />
+                    <h2 className="text-xl font-bold">Admin Panel</h2>
                 </SidebarHeader>
                 <SidebarContent>
                     <SidebarMenu>
@@ -110,10 +112,6 @@ export default async function AdminLayout({
                 </SidebarFooter>
             </Sidebar>
             <main className="flex-1 p-4 mt-4 md:p-8 overflow-y-auto">
-                 <header className="flex items-center gap-4 p-4 bg-background border-b md:hidden -mx-4 -mt-4 mb-4 sticky top-0 z-30">
-                    <SidebarTrigger />
-                    <h1 className="text-lg font-semibold">Admin Dashboard</h1>
-                </header>
                 {children}
             </main>
         </div>
