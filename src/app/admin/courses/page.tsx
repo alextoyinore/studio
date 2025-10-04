@@ -15,14 +15,14 @@ import {
 import { format } from "date-fns";
 
 type CourseWithSchool = Course & {
-    schools: { name: string } | null;
+    school: { name: string } | null;
 }
 
 async function getCourses(): Promise<CourseWithSchool[]> {
   const supabase = createClient();
   const { data, error } = await supabase
     .from("courses")
-    .select("*, schools(name)")
+    .select("*, school:schools(name)")
     .order("created_at", { ascending: false });
 
   if (error) {
@@ -66,7 +66,7 @@ export default async function AdminCoursesPage() {
                 courses.map((course) => (
                   <TableRow key={course.id}>
                     <TableCell className="font-medium">{course.title}</TableCell>
-                    <TableCell>{course.schools?.name || 'N/A'}</TableCell>
+                    <TableCell>{course.school?.name || 'N/A'}</TableCell>
                     <TableCell>{course.duration}</TableCell>
                     <TableCell className="text-right">
                       {format(new Date(course.created_at), "MMM d, yyyy")}
