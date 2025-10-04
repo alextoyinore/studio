@@ -24,20 +24,6 @@ async function getBlogPostsWithAuthors(): Promise<BlogPostWithAuthorEmail[]> {
     // A client for public-facing queries
     const supabase = createClient();
     
-    // A secure, admin-only client for fetching user data
-    const supabaseAdmin = createAdminClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.SUPABASE_SERVICE_ROLE_KEY!,
-        { auth: { autoRefreshToken: false, persistSession: false } }
-    );
-
-    const { data: usersData, error: usersError } = await supabaseAdmin.auth.admin.listUsers();
-    
-    if (usersError) {
-        console.error("Error fetching users:", usersError);
-        // If we can't get users, we can still show posts, just without author emails.
-    }
-
     const { data: posts, error: postsError } = await supabase
         .from("blog_posts")
         .select("*")
@@ -46,6 +32,29 @@ async function getBlogPostsWithAuthors(): Promise<BlogPostWithAuthorEmail[]> {
     if (postsError) {
         console.error("Error fetching blog posts:", postsError);
         return [];
+    }
+
+    const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    if (!serviceKey) {
+        console.warn("SUPABASE_SERVICE_ROLE_KEY is not set. Author emails will not be displayed.");
+        return posts.map(post => ({
+            ...post,
+            author_email: 'N/A',
+        })) as BlogPostWithAuthorEmail[];
+    }
+    
+    // A secure, admin-only client for fetching user data
+    const supabaseAdmin = createAdminClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        serviceKey,
+        { auth: { autoRefreshToken: false, persistSession: false } }
+    );
+
+    const { data: usersData, error: usersError } = await supabaseAdmin.auth.admin.listUsers();
+    
+    if (usersError) {
+        console.error("Error fetching users:", usersError);
+        // If we can't get users, we can still show posts, just without author emails.
     }
 
     // Create a map of user IDs to emails for easy lookup

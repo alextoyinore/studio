@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useEffect, use } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -38,13 +38,12 @@ const formSchema = z.object({
 
 type ApplicationFormValues = z.infer<typeof formSchema>;
 
-// The params are a promise in client components, so we need to type it correctly
 type PageProps = {
     params: { jobId: string };
 }
 
 export default function JobApplicationPage({ params }: PageProps) {
-  const { jobId } = use(params);
+  const { jobId } = params;
 
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -64,6 +63,7 @@ export default function JobApplicationPage({ params }: PageProps) {
 
   useEffect(() => {
     async function fetchJob() {
+      if (!jobId) return;
       const supabase = createClient();
       const { data, error } = await supabase.from('jobs').select('*').eq('id', jobId).single();
       if (error) {
@@ -78,6 +78,12 @@ export default function JobApplicationPage({ params }: PageProps) {
     }
     fetchJob();
   }, [jobId, toast]);
+  
+  useEffect(() => {
+    if (jobId) {
+      form.setValue("jobId", jobId);
+    }
+  }, [jobId, form]);
 
   async function onSubmit(values: ApplicationFormValues) {
     setIsSubmitting(true);
