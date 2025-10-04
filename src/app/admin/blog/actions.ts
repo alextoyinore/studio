@@ -57,6 +57,7 @@ export async function addBlogPost(data: BlogPostFormInput) {
     return {
       success: false,
       message: "There was an error saving the post. Please ensure the table structure is correct.",
+      error: JSON.stringify(error, null, 2),
     };
   }
 
