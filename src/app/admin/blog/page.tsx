@@ -22,7 +22,6 @@ type BlogPostWithAuthor = Omit<BlogPost, 'author'> & {
 
 async function getBlogPosts(): Promise<BlogPostWithAuthor[]> {
   const supabase = createClient();
-  // Using an explicit join syntax which is more robust.
   const { data, error } = await supabase
     .from("blog_posts")
     .select("*, profiles(email)")
@@ -94,4 +93,3 @@ export default async function AdminBlogPage() {
     </div>
   );
 }
-
