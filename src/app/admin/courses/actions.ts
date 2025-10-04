@@ -1,3 +1,4 @@
+
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
@@ -28,7 +29,7 @@ export async function addCourse(data: CourseFormInput) {
   
   const { title, schoolId, duration, description, enrollUrl, travelType } = parsedData.data;
 
-  const travelTypeArray = travelType.split(',').map(item => item.trim());
+  const travelTypeArray = travelType.split(',').map(item => item.trim()).filter(Boolean);
 
   const { error } = await supabase.from("courses").insert([
     {
