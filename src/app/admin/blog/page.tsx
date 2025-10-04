@@ -1,5 +1,5 @@
 
-
+import { createClient as createAdminClient } from '@supabase/supabase-js'
 import { createClient } from "@/lib/supabase/server";
 import type { BlogPost } from "@/lib/types";
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
@@ -21,10 +21,18 @@ type BlogPostWithAuthorEmail = BlogPost & {
 }
 
 async function getBlogPostsWithAuthors(): Promise<BlogPostWithAuthorEmail[]> {
+    // A client for public-facing queries
     const supabase = createClient();
+    
+    // A secure, admin-only client for fetching user data
+    const supabaseAdmin = createAdminClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.SUPABASE_SERVICE_ROLE_KEY!,
+        { auth: { autoRefreshToken: false, persistSession: false } }
+    );
 
-    // The admin client has the permissions to query auth.users
-    const { data: usersData, error: usersError } = await supabase.auth.admin.listUsers();
+    const { data: usersData, error: usersError } = await supabaseAdmin.auth.admin.listUsers();
+    
     if (usersError) {
         console.error("Error fetching users:", usersError);
         // If we can't get users, we can still show posts, just without author emails.
@@ -115,5 +123,3 @@ export default async function AdminBlogPage() {
     </div>
   );
 }
-
-    
