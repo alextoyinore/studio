@@ -1,4 +1,5 @@
 
+
 import { createClient } from '@/lib/supabase/server';
 import type { Course, School } from '@/lib/types';
 import { notFound } from 'next/navigation';
@@ -19,7 +20,7 @@ async function getCourse(courseId: string): Promise<CourseWithSchool | null> {
         .from('courses')
         .select(`
             *,
-            school:schools (*)
+            schools (*)
         `)
         .eq('id', courseId)
         .single();
@@ -66,7 +67,7 @@ export default async function CoursePage({ params }: { params: { courseId: strin
                     <div className="flex justify-center items-center flex-wrap gap-x-6 gap-y-2 text-sm text-slate-200">
                         <div className="flex items-center gap-2">
                             <SchoolIcon className="h-5 w-5" />
-                            <Link href={`/courses/${school.id}`} className="hover:underline">{school.name}</Link>
+                            <Link href={`/schools/${school.id}`} className="hover:underline">{school.name}</Link>
                         </div>
                         <div className="flex items-center gap-2">
                             <MapPin className="h-5 w-5" />
@@ -92,7 +93,7 @@ export default async function CoursePage({ params }: { params: { courseId: strin
                             <Clock className="h-5 w-5 mr-3 text-accent" />
                             <span>{course.duration}</span>
                         </div>
-                         {course.travel_type && course.travel_type.length > 0 && (
+                         {Array.isArray(course.travel_type) && course.travel_type.length > 0 && (
                             <div className="space-y-3">
                                 <h4 className="font-medium text-foreground">Relevant Travel Types</h4>
                                 <div className="flex flex-wrap gap-2">
@@ -106,7 +107,7 @@ export default async function CoursePage({ params }: { params: { courseId: strin
                         )}
                         {school && (
                             <Button asChild variant="outline" className="w-full">
-                                <Link href={`/courses/${school.id}`}>
+                                <Link href={`/schools/${school.id}`}>
                                     <SchoolIcon className="mr-2" />
                                     More from {school.name}
                                 </Link>

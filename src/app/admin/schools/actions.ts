@@ -1,3 +1,4 @@
+
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
@@ -50,7 +51,7 @@ export async function addSchool(data: SchoolFormInput) {
   }
 
   revalidatePath("/admin/schools");
-  revalidatePath("/courses");
+  revalidatePath("/schools");
 
   return { success: true, message: "School added successfully." };
 }
