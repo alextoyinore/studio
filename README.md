@@ -1,5 +1,3 @@
-# Firebase Studio
+# Oceanic Agency
 
-This is a NextJS starter in Firebase Studio.
-
-To get started, take a look at src/app/page.tsx.
+Web app for Oceanic Agency - a travel agency
