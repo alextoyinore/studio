@@ -55,3 +55,20 @@ export async function addSchool(data: SchoolFormInput) {
 
   return { success: true, message: "School added successfully." };
 }
+
+export async function deleteSchool(id: string) {
+    const cookieStore = cookies();
+    const supabase = createClient(cookieStore);
+
+    const { error } = await supabase.from('schools').delete().eq('id', id);
+
+    if (error) {
+        console.error("Error deleting school:", error);
+        return { success: false, message: "There was an error deleting the school." };
+    }
+
+    revalidatePath("/admin/schools");
+    revalidatePath("/schools");
+
+    return { success: true, message: "School deleted successfully." };
+}

@@ -1,3 +1,4 @@
+
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
@@ -62,4 +63,21 @@ export async function addJob(data: JobFormInput) {
   revalidatePath("/jobs");
 
   return { success: true, message: "Job posted successfully." };
+}
+
+export async function deleteJob(id: string) {
+    const cookieStore = cookies();
+    const supabase = createClient(cookieStore);
+
+    const { error } = await supabase.from('jobs').delete().eq('id', id);
+
+    if (error) {
+        console.error("Error deleting job:", error);
+        return { success: false, message: "There was an error deleting the job." };
+    }
+
+    revalidatePath("/admin/jobs");
+    revalidatePath("/jobs");
+
+    return { success: true, message: "Job deleted successfully." };
 }
