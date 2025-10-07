@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -38,7 +38,7 @@ const formSchema = z.object({
 type SchoolFormValues = z.infer<typeof formSchema>;
 
 export default function EditSchoolPage({ params }: { params: { id: string }}) {
-  const { id } = params;
+  const { id } = use(params);
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
