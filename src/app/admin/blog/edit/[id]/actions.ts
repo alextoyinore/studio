@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import * as z from "zod";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
+import type { BlogPost } from "@/lib/types";
 
 const formSchema = z.object({
   title: z.string().min(5, "Title must be at least 5 characters."),
@@ -20,7 +21,19 @@ const formSchema = z.object({
 
 type BlogPostFormInput = z.infer<typeof formSchema>;
 
-export async function addBlogPost(data: BlogPostFormInput) {
+export async function getBlogPost(id: string): Promise<BlogPost | null> {
+    const cookieStore = cookies();
+    const supabase = createClient(cookieStore);
+    const { data, error } = await supabase.from('blog_posts').select('*').eq('id', id).single();
+    if (error) {
+        console.error("Error fetching blog post:", error);
+        return null;
+    }
+    return data as BlogPost;
+}
+
+
+export async function updateBlogPost(id: string, data: BlogPostFormInput) {
   const cookieStore = cookies();
   const supabase = createClient(cookieStore);
 
@@ -49,20 +62,18 @@ export async function addBlogPost(data: BlogPostFormInput) {
       tags: tagsArray,
   };
 
-
-  const { error } = await supabase.from("blog_posts").insert([postData]);
+  const { error } = await supabase.from("blog_posts").update(postData).eq('id', id);
 
   if (error) {
-    console.error("Error saving blog post:", error);
+    console.error("Error updating blog post:", error);
     return {
       success: false,
-      message: "There was an error saving the post. Please ensure the table structure is correct.",
+      message: "There was an error updating the post.",
     };
   }
 
   revalidatePath("/admin/blog");
-  revalidatePath("/blog"); // Revalidate public-facing blog page if it exists
-  revalidatePath("/"); // Revalidate homepage for featured posts
+  revalidatePath(`/blog/${slug}`);
 
-  return { success: true, message: "Blog post created successfully." };
+  return { success: true, message: "Blog post updated successfully." };
 }

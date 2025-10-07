@@ -20,31 +20,40 @@ import { login, signup } from "./actions";
 import { Loader2 } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 
-const formSchema = z.object({
+const loginSchema = z.object({
   email: z.string().email("Please enter a valid email."),
   password: z.string().min(6, "Password must be at least 6 characters."),
 });
 
-type LoginFormValues = z.infer<typeof formSchema>;
+const signupSchema = z.object({
+  name: z.string().min(2, "Please enter your name."),
+  email: z.string().email("Please enter a valid email."),
+  password: z.string().min(6, "Password must be at least 6 characters."),
+});
+
+type LoginFormValues = z.infer<typeof loginSchema>;
+type SignupFormValues = z.infer<typeof signupSchema>;
+
 
 export default function LoginPage() {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
 
-  const form = useForm<LoginFormValues>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<SignupFormValues>({
+    resolver: zodResolver(isSignUp ? signupSchema : loginSchema),
     defaultValues: {
+      name: "",
       email: "",
       password: "",
     },
   });
 
-  async function onSubmit(values: LoginFormValues) {
+  async function onSubmit(values: SignupFormValues | LoginFormValues) {
     setIsSubmitting(true);
     
     if (isSignUp) {
-      const result = await signup(values);
+      const result = await signup(values as SignupFormValues);
        if (result.success) {
         toast({
             title: "Account Created!",
@@ -60,7 +69,7 @@ export default function LoginPage() {
         });
       }
     } else {
-      const result = await login(values);
+      const result = await login(values as LoginFormValues);
       if (result?.success === false) {
         toast({
             variant: "destructive",
@@ -84,14 +93,29 @@ export default function LoginPage() {
         <CardContent>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+               {isSignUp && (
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-muted-foreground">Full Name</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Full Name" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
               <FormField
                 control={form.control}
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel className="text-muted-foreground">Email</FormLabel>
                     <FormControl>
-                      <Input placeholder="admin@example.com" {...field} />
+                      <Input placeholder="Email Address" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -102,9 +126,9 @@ export default function LoginPage() {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Password</FormLabel>
+                    <FormLabel className="text-muted-foreground">Password</FormLabel>
                     <FormControl>
-                      <Input type="password" placeholder="••••••••" {...field} />
+                      <Input type="password" placeholder="Password" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

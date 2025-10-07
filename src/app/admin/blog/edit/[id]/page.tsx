@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -22,10 +22,9 @@ import { Loader2 } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import { addBlogPost } from "../actions";
+import { getBlogPost, updateBlogPost } from "./actions";
 import { ImageUpload } from "@/components/ImageUpload";
-import { createClient } from "@/lib/supabase/client";
-import type { User } from "@supabase/supabase-js";
+import type { BlogPost } from "@/lib/types";
 
 const formSchema = z.object({
   title: z.string().min(5, "Title must be at least 5 characters."),
@@ -41,19 +40,11 @@ const formSchema = z.object({
 
 type BlogPostFormValues = z.infer<typeof formSchema>;
 
-export default function AddBlogPostPage() {
+export default function EditBlogPostPage({ params }: { params: { id: string }}) {
+  const { id } = use(params);
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [user, setUser] = useState<User | null>(null);
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      const supabase = createClient();
-      const { data: { user } } = await supabase.auth.getUser();
-      setUser(user);
-    };
-    fetchUser();
-  }, []);
+  const [isLoading, setIsLoading] = useState(true);
 
   const form = useForm<BlogPostFormValues>({
     resolver: zodResolver(formSchema),
@@ -71,26 +62,35 @@ export default function AddBlogPostPage() {
   });
 
   useEffect(() => {
-    if (user?.user_metadata?.display_name) {
-      form.setValue("authorName", user.user_metadata.display_name);
+    async function fetchPost() {
+      const post = await getBlogPost(id);
+      if (post) {
+        form.reset({
+            ...post,
+            tags: post.tags?.join(', ') || ''
+        });
+      } else {
+         toast({
+          variant: "destructive",
+          title: "Post not found.",
+        });
+      }
+      setIsLoading(false);
     }
-  }, [user, form]);
+    fetchPost();
+  }, [id, form, toast]);
 
 
   async function onSubmit(values: BlogPostFormValues) {
     setIsSubmitting(true);
-    const result = await addBlogPost(values);
+    const result = await updateBlogPost(id, values);
     setIsSubmitting(false);
 
     if (result.success) {
       toast({
-        title: "Post Created!",
-        description: "Your new blog post has been saved successfully.",
+        title: "Post Updated!",
+        description: "Your blog post has been updated successfully.",
       });
-      form.reset();
-       if (user?.user_metadata?.display_name) {
-        form.setValue("authorName", user.user_metadata.display_name);
-      }
     } else {
         toast({
           variant: "destructive",
@@ -98,6 +98,10 @@ export default function AddBlogPostPage() {
           description: result.message || "There was a problem saving the post.",
         });
     }
+  }
+
+  if (isLoading) {
+    return <div className="flex justify-center items-center h-64"><Loader2 className="h-8 w-8 animate-spin" /></div>
   }
 
   return (
@@ -109,12 +113,12 @@ export default function AddBlogPostPage() {
                 <span className="sr-only">Back to Blog</span>
             </Link>
         </Button>
-        <h1 className="text-3xl font-bold">Create New Post</h1>
+        <h1 className="text-3xl font-bold">Edit Post</h1>
       </div>
       <Card>
         <CardHeader>
           <CardTitle>Post Details</CardTitle>
-          <CardDescription>Fill out the form to create a new blog post.</CardDescription>
+          <CardDescription>Update the details of your blog post.</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -261,10 +265,10 @@ export default function AddBlogPostPage() {
                 {isSubmitting ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Publishing...
+                    Saving...
                   </>
                 ) : (
-                  "Publish Post"
+                  "Save Changes"
                 )}
               </Button>
             </form>

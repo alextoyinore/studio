@@ -1,3 +1,7 @@
+
+
+
+
 import type { BlogPost } from '@/lib/types';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -10,6 +14,8 @@ type BlogCardFeaturedProps = {
 };
 
 export function BlogCardFeatured({ post }: BlogCardFeaturedProps) {
+  const authorName = post.author_name || 'Anonymous';
+
   return (
     <div className="relative rounded-lg overflow-hidden group shadow-lg">
       <Link href={`/blog/${post.slug}`}>
@@ -27,7 +33,7 @@ export function BlogCardFeatured({ post }: BlogCardFeaturedProps) {
           <h2 className="font-headline text-3xl md:text-4xl font-bold mb-4 max-w-2xl">{post.title}</h2>
           <p className="text-slate-300 mb-4 max-w-2xl hidden md:line-clamp-2">{post.excerpt}</p>
           <div className="flex items-center text-sm gap-4">
-            <span>By {post.author}</span>
+            <span>By {authorName}</span>
             <span>&bull;</span>
             <time dateTime={post.created_at}>{format(new Date(post.created_at), 'MMMM d, yyyy')}</time>
           </div>
@@ -36,3 +42,5 @@ export function BlogCardFeatured({ post }: BlogCardFeaturedProps) {
     </div>
   );
 }
+
+    

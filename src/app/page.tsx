@@ -1,4 +1,5 @@
 
+
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { AnimatedText } from '@/components/AnimatedText';
@@ -119,7 +120,7 @@ export default async function Home() {
             <Link href="/jobs">Find Jobs</Link>
           </Button>
           <Button asChild size="lg" variant="secondary">
-            <Link href="/courses">Explore Courses</Link>
+            <Link href="/courses">Explore Schools</Link>
           </Button>
         </div>
       </section>
@@ -239,3 +240,6 @@ export default async function Home() {
     </div>
   );
 }
+
+    
+    

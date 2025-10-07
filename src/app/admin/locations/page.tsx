@@ -1,7 +1,7 @@
 
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { PlusCircle } from "lucide-react";
+import { Pencil, PlusCircle } from "lucide-react";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import type { Location } from "@/lib/types";
@@ -54,7 +54,8 @@ export default async function AdminLocationsPage() {
               <TableRow>
                 <TableHead>Name</TableHead>
                 <TableHead>Description</TableHead>
-                <TableHead className="text-right">Created At</TableHead>
+                <TableHead>Created At</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -63,14 +64,22 @@ export default async function AdminLocationsPage() {
                   <TableRow key={location.id}>
                     <TableCell className="font-medium">{location.name}</TableCell>
                     <TableCell className="max-w-sm truncate">{location.description}</TableCell>
-                    <TableCell className="text-right">
+                    <TableCell>
                       {format(new Date(location.created_at), "MMM d, yyyy")}
+                    </TableCell>
+                    <TableCell className="text-right">
+                        <Button asChild variant="ghost" size="icon">
+                            <Link href={`/admin/locations/edit/${location.id}`}>
+                                <Pencil className="h-4 w-4" />
+                                <span className="sr-only">Edit</span>
+                            </Link>
+                        </Button>
                     </TableCell>
                   </TableRow>
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={3} className="h-24 text-center">
+                  <TableCell colSpan={4} className="h-24 text-center">
                     No locations added yet.
                   </TableCell>
                 </TableRow>

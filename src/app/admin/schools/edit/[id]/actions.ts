@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import * as z from "zod";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
+import type { School } from "@/lib/types";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters."),
@@ -18,7 +19,18 @@ const formSchema = z.object({
 
 type SchoolFormInput = z.infer<typeof formSchema>;
 
-export async function addSchool(data: SchoolFormInput) {
+export async function getSchool(id: string): Promise<School | null> {
+    const cookieStore = cookies();
+    const supabase = createClient(cookieStore);
+    const { data, error } = await supabase.from('schools').select('*').eq('id', id).single();
+    if (error) {
+        console.error("Error fetching school:", error);
+        return null;
+    }
+    return data as School;
+}
+
+export async function updateSchool(id: string, data: SchoolFormInput) {
   const parsedData = formSchema.safeParse(data);
 
   if (!parsedData.success) {
@@ -30,8 +42,7 @@ export async function addSchool(data: SchoolFormInput) {
   const cookieStore = cookies();
   const supabase = createClient(cookieStore);
   
-  const { error } = await supabase.from("schools").insert([
-    {
+  const { error } = await supabase.from("schools").update({
       name,
       location,
       country,
@@ -39,19 +50,18 @@ export async function addSchool(data: SchoolFormInput) {
       image_url: imageUrl,
       image_description: imageDescription,
       image_hint: imageHint,
-    },
-  ]);
+    }).eq('id', id);
 
   if (error) {
-    console.error("Error saving school:", error);
+    console.error("Error updating school:", error);
     return {
       success: false,
-      message: "There was an error saving the school. Please check the database connection and table structure.",
+      message: "There was an error updating the school.",
     };
   }
 
   revalidatePath("/admin/schools");
-  revalidatePath("/schools");
+  revalidatePath(`/schools/${id}`);
 
-  return { success: true, message: "School added successfully." };
+  return { success: true, message: "School updated successfully." };
 }

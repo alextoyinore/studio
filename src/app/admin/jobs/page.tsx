@@ -3,7 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import type { Job } from "@/lib/types";
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { PlusCircle } from "lucide-react";
+import { Pencil, PlusCircle } from "lucide-react";
 import Link from "next/link";
 import {
   Table,
@@ -55,7 +55,8 @@ export default async function AdminJobsPage() {
                 <TableHead>Title</TableHead>
                 <TableHead>Company</TableHead>
                 <TableHead>Location</TableHead>
-                <TableHead className="text-right">Created At</TableHead>
+                <TableHead>Created At</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -65,14 +66,22 @@ export default async function AdminJobsPage() {
                     <TableCell className="font-medium">{job.title}</TableCell>
                     <TableCell>{job.company}</TableCell>
                     <TableCell>{job.location}</TableCell>
-                    <TableCell className="text-right">
+                    <TableCell>
                       {format(new Date(job.created_at), "MMM d, yyyy")}
+                    </TableCell>
+                    <TableCell className="text-right">
+                        <Button asChild variant="ghost" size="icon">
+                            <Link href={`/admin/jobs/edit/${job.id}`}>
+                                <Pencil className="h-4 w-4" />
+                                <span className="sr-only">Edit</span>
+                            </Link>
+                        </Button>
                     </TableCell>
                   </TableRow>
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={4} className="h-24 text-center">
+                  <TableCell colSpan={5} className="h-24 text-center">
                     No jobs posted yet.
                   </TableCell>
                 </TableRow>

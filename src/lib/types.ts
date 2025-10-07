@@ -1,5 +1,8 @@
 
 
+
+
+
 import type { ImagePlaceholder } from './placeholder-images';
 
 export type TravelType = 'work' | 'student' | 'vacation';
@@ -70,15 +73,24 @@ export type ContactSubmission = {
   message: string;
 };
 
+export type Profile = {
+    id: string;
+    email: string;
+    role: 'superadmin' | 'admin' | 'staff' | 'user';
+}
+
 export type BlogPost = {
   id: string;
   created_at: string;
   title: string;
   slug: string;
   content: string;
-  author: string;
+  author_name?: string;
   image_url: string;
+  image_description: string;
+  image_hint: string;
   excerpt: string;
   category: string;
   tags: string[];
 };
+

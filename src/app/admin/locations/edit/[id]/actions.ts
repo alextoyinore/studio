@@ -1,9 +1,11 @@
+
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
 import * as z from "zod";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
+import type { Location } from "@/lib/types";
 
 const formSchema = z.object({
   name: z.string().min(2),
@@ -16,7 +18,19 @@ const formSchema = z.object({
 
 type LocationFormInput = z.infer<typeof formSchema>;
 
-export async function addLocation(data: LocationFormInput) {
+
+export async function getLocation(id: string): Promise<Location | null> {
+    const cookieStore = cookies();
+    const supabase = createClient(cookieStore);
+    const { data, error } = await supabase.from('locations').select('*').eq('id', id).single();
+    if (error) {
+        console.error("Error fetching location:", error);
+        return null;
+    }
+    return data as Location;
+}
+
+export async function updateLocation(id: string, data: LocationFormInput) {
   const parsedData = formSchema.safeParse(data);
 
   if (!parsedData.success) {
@@ -28,31 +42,27 @@ export async function addLocation(data: LocationFormInput) {
   const cookieStore = cookies();
   const supabase = createClient(cookieStore);
   
-  // Split attractions string into an array
   const attractionsArray = attractions.split(',').map(item => item.trim()).filter(Boolean);
 
-  const { error } = await supabase.from("locations").insert([
-    {
+  const { error } = await supabase.from("locations").update({
       name,
       description,
       image_url: imageUrl,
       image_description: imageDescription,
       image_hint: imageHint,
       attractions: attractionsArray,
-    },
-  ]);
+    }).eq('id', id);
 
   if (error) {
-    console.error("Error saving location:", error);
+    console.error("Error updating location:", error);
     return {
       success: false,
-      message: "There was an error saving the location. Please check the database connection and table structure.",
+      message: "There was an error updating the location.",
     };
   }
 
-  // Revalidate the locations page to show the new data
   revalidatePath("/admin/locations");
-  revalidatePath("/destinations"); // Also revalidate public destinations page if it uses this data
+  revalidatePath(`/locations/${id}`);
 
-  return { success: true, message: "Location added successfully." };
+  return { success: true, message: "Location updated successfully." };
 }

@@ -1,11 +1,12 @@
 
+
 import { createClient } from '@/lib/supabase/server';
 import type { School } from '@/lib/types';
 import SchoolsClientPage from './SchoolsClientPage';
 
 async function getSchools() {
   const supabase = createClient();
-  const { data, error } = await supabase.from('schools').select('*').order('name', { ascending: true });
+  const { data, error } = await supabase.from('schools').select('*, courses(*)').order('name', { ascending: true });
 
   if (error) {
     console.error('Error fetching schools:', error);

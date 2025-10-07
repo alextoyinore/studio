@@ -3,6 +3,7 @@
 
 import * as z from "zod";
 import { createClient } from "@/lib/supabase/server";
+import { cookies } from "next/headers";
 
 const formSchema = z.object({
   jobId: z.string().uuid(),
@@ -25,7 +26,8 @@ export async function submitApplication(data: ApplicationFormInput) {
 
   const { jobId, fullName, email, phone, coverLetter, resumeUrl, hasPassport } = parsedData.data;
 
-  const supabase = createClient();
+  const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
 
   const { error } = await supabase.from("job_applications").insert([
     {

@@ -1,8 +1,9 @@
+
 import { createClient } from "@/lib/supabase/server";
 import type { Course } from "@/lib/types";
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { PlusCircle } from "lucide-react";
+import { Pencil, PlusCircle } from "lucide-react";
 import Link from "next/link";
 import {
   Table,
@@ -15,14 +16,14 @@ import {
 import { format } from "date-fns";
 
 type CourseWithSchool = Course & {
-    schools: { name: string } | null;
+    school: { name: string } | null;
 }
 
 async function getCourses(): Promise<CourseWithSchool[]> {
   const supabase = createClient();
   const { data, error } = await supabase
     .from("courses")
-    .select("*, schools(name)")
+    .select("*, school:schools(name)")
     .order("created_at", { ascending: false });
 
   if (error) {
@@ -58,7 +59,8 @@ export default async function AdminCoursesPage() {
                 <TableHead>Title</TableHead>
                 <TableHead>School</TableHead>
                 <TableHead>Duration</TableHead>
-                <TableHead className="text-right">Created At</TableHead>
+                <TableHead>Created At</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -66,16 +68,24 @@ export default async function AdminCoursesPage() {
                 courses.map((course) => (
                   <TableRow key={course.id}>
                     <TableCell className="font-medium">{course.title}</TableCell>
-                    <TableCell>{course.schools?.name || 'N/A'}</TableCell>
+                    <TableCell>{course.school?.name || 'N/A'}</TableCell>
                     <TableCell>{course.duration}</TableCell>
-                    <TableCell className="text-right">
+                    <TableCell>
                       {format(new Date(course.created_at), "MMM d, yyyy")}
+                    </TableCell>
+                    <TableCell className="text-right">
+                        <Button asChild variant="ghost" size="icon">
+                            <Link href={`/admin/courses/edit/${course.id}`}>
+                                <Pencil className="h-4 w-4" />
+                                <span className="sr-only">Edit</span>
+                            </Link>
+                        </Button>
                     </TableCell>
                   </TableRow>
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={4} className="h-24 text-center">
+                  <TableCell colSpan={5} className="h-24 text-center">
                     No courses added yet.
                   </TableCell>
                 </TableRow>

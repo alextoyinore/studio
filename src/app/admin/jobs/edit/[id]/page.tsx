@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -22,99 +22,107 @@ import { Loader2 } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import { addBlogPost } from "../actions";
+import { getJob, updateJob } from "./actions";
 import { ImageUpload } from "@/components/ImageUpload";
-import { createClient } from "@/lib/supabase/client";
-import type { User } from "@supabase/supabase-js";
 
 const formSchema = z.object({
-  title: z.string().min(5, "Title must be at least 5 characters."),
-  content: z.string().min(20, "Content must be at least 20 characters."),
-  imageUrl: z.string().min(1, "Please upload an image for the cover."),
+  title: z.string().min(3, "Title must be at least 3 characters."),
+  company: z.string().min(2, "Company must be at least 2 characters."),
+  location: z.string().min(2, "Location must be at least 2 characters."),
+  salary: z.string().min(3, "Please provide a salary or range."),
+  description: z.string().min(10, "Description must be at least 10 characters."),
+  applyUrl: z.string().url("Please enter a valid URL for the application link."),
+  travelType: z.string().min(3, "Please enter at least one travel type, separated by commas."),
+  imageUrl: z.string().optional(),
   imageDescription: z.string().optional(),
   imageHint: z.string().optional(),
-  excerpt: z.string().min(10, "Excerpt must be at least 10 characters.").max(300, "Excerpt cannot exceed 300 characters."),
-  category: z.string().min(3, "Please select a category."),
-  tags: z.string().optional(),
-  authorName: z.string().min(1, "Author name is required."),
 });
 
-type BlogPostFormValues = z.infer<typeof formSchema>;
+type JobFormValues = z.infer<typeof formSchema>;
 
-export default function AddBlogPostPage() {
+export default function EditJobPage({ params }: { params: { id: string } }) {
+  const { id } = use(params);
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      const supabase = createClient();
-      const { data: { user } } = await supabase.auth.getUser();
-      setUser(user);
-    };
-    fetchUser();
-  }, []);
-
-  const form = useForm<BlogPostFormValues>({
+  const form = useForm<JobFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: "",
-      content: "",
+      company: "",
+      location: "",
+      salary: "",
+      description: "",
+      applyUrl: "",
+      travelType: "",
       imageUrl: "",
       imageDescription: "",
       imageHint: "",
-      excerpt: "",
-      category: "",
-      tags: "",
-      authorName: "",
     },
   });
 
   useEffect(() => {
-    if (user?.user_metadata?.display_name) {
-      form.setValue("authorName", user.user_metadata.display_name);
+    async function fetchJob() {
+        const job = await getJob(id);
+        if (job) {
+            form.reset({
+                ...job,
+                applyUrl: job.apply_url,
+                imageUrl: job.image_url || "",
+                imageDescription: job.image_description || "",
+                imageHint: job.image_hint || "",
+                travelType: Array.isArray(job.travel_type) ? job.travel_type.join(', ') : '',
+            });
+        } else {
+            toast({
+                variant: "destructive",
+                title: "Job not found",
+            });
+        }
+        setIsLoading(false);
     }
-  }, [user, form]);
+    fetchJob();
+  }, [id, form, toast]);
 
-
-  async function onSubmit(values: BlogPostFormValues) {
+  async function onSubmit(values: JobFormValues) {
     setIsSubmitting(true);
-    const result = await addBlogPost(values);
+    const result = await updateJob(id, values);
     setIsSubmitting(false);
 
     if (result.success) {
       toast({
-        title: "Post Created!",
-        description: "Your new blog post has been saved successfully.",
+        title: "Job Updated!",
+        description: "The job has been updated successfully.",
       });
-      form.reset();
-       if (user?.user_metadata?.display_name) {
-        form.setValue("authorName", user.user_metadata.display_name);
-      }
     } else {
-        toast({
-          variant: "destructive",
-          title: "Uh oh! Something went wrong.",
-          description: result.message || "There was a problem saving the post.",
-        });
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: result.message || "There was a problem saving the job.",
+      });
     }
+  }
+  
+  if (isLoading) {
+    return <div className="flex justify-center items-center h-64"><Loader2 className="h-8 w-8 animate-spin" /></div>
   }
 
   return (
     <div>
       <div className="flex items-center gap-4 mb-6">
         <Button asChild variant="outline" size="icon">
-            <Link href="/admin/blog">
+            <Link href="/admin/jobs">
                 <ArrowLeft />
-                <span className="sr-only">Back to Blog</span>
+                <span className="sr-only">Back to Jobs</span>
             </Link>
         </Button>
-        <h1 className="text-3xl font-bold">Create New Post</h1>
+        <h1 className="text-3xl font-bold">Edit Job</h1>
       </div>
       <Card>
         <CardHeader>
-          <CardTitle>Post Details</CardTitle>
-          <CardDescription>Fill out the form to create a new blog post.</CardDescription>
+          <CardTitle>Job Details</CardTitle>
+          <CardDescription>Update the details for this job opportunity.</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -124,26 +132,77 @@ export default function AddBlogPostPage() {
                 name="title"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Post Title</FormLabel>
+                    <FormLabel>Job Title</FormLabel>
                     <FormControl>
-                      <Input placeholder="e.g., My Trip to the Mountains" {...field} />
+                      <Input placeholder="e.g., Software Engineer" {...field} />
                     </FormControl>
-                    <FormDescription>The slug will be automatically generated from this.</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+               <FormField
+                control={form.control}
+                name="company"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Company</FormLabel>
+                    <FormControl>
+                      <Input placeholder="e.g., Tech Solutions Inc." {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+               <FormField
+                control={form.control}
+                name="location"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Location</FormLabel>
+                    <FormControl>
+                      <Input placeholder="e.g., Paris, France" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+                <FormField
+                control={form.control}
+                name="salary"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Salary</FormLabel>
+                    <FormControl>
+                      <Input placeholder="e.g., €70,000 - €90,000" {...field} />
+                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
               <FormField
                 control={form.control}
-                name="excerpt"
+                name="description"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Excerpt</FormLabel>
+                    <FormLabel>Description</FormLabel>
                     <FormControl>
-                      <Textarea placeholder="A short summary of the post..." {...field} rows={3} />
+                      <Textarea placeholder="A short description of the job role and requirements." {...field} />
                     </FormControl>
-                     <FormDescription>
-                      A brief summary of the post, used for previews.
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+                <FormField
+                control={form.control}
+                name="travelType"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Travel Types</FormLabel>
+                    <FormControl>
+                      <Input placeholder="e.g., work, student" {...field} />
+                    </FormControl>
+                    <FormDescription>
+                      Comma-separated list of travel types (e.g., work, student, vacation).
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -151,75 +210,28 @@ export default function AddBlogPostPage() {
               />
               <FormField
                 control={form.control}
-                name="content"
+                name="applyUrl"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Content</FormLabel>
+                    <FormLabel>Apply URL</FormLabel>
                     <FormControl>
-                      <Textarea placeholder="Write your blog post here. Markdown is supported." {...field} rows={15} />
+                      <Input placeholder="https://example.com/apply" {...field} />
                     </FormControl>
                      <FormDescription>
-                      The main content of your blog post. You can use Markdown for formatting.
+                      The direct link for candidates to apply.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-               <FormField
-                control={form.control}
-                name="category"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Category</FormLabel>
-                    <FormControl>
-                      <Input placeholder="e.g., Travel Guides" {...field} />
-                    </FormControl>
-                    <FormDescription>
-                      The main category for this post.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-               <FormField
-                control={form.control}
-                name="tags"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Tags</FormLabel>
-                    <FormControl>
-                      <Input placeholder="e.g., mountains, hiking, nature" {...field} />
-                    </FormControl>
-                    <FormDescription>
-                      Comma-separated list of tags.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-               <FormField
-                control={form.control}
-                name="authorName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Author Name</FormLabel>
-                    <FormControl>
-                      <Input placeholder="e.g., Jane Doe" {...field} />
-                    </FormControl>
-                    <FormDescription>
-                      The author's name will be pre-filled if you are logged in.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+               <h3 className="text-lg font-medium pt-4 border-t">Job Image</h3>
               <FormField
                 control={form.control}
                 name="imageUrl"
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
-                      <ImageUpload value={field.value} onChange={field.onChange} />
+                      <ImageUpload value={field.value || ""} onChange={field.onChange} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -232,7 +244,7 @@ export default function AddBlogPostPage() {
                   <FormItem>
                     <FormLabel>Image Description</FormLabel>
                     <FormControl>
-                      <Input placeholder="e.g., A beautiful mountain range at sunset." {...field} />
+                      <Input placeholder="e.g., The company's logo or office." {...field} />
                     </FormControl>
                     <FormDescription>
                       This is used for image alt text (accessibility).
@@ -248,7 +260,7 @@ export default function AddBlogPostPage() {
                   <FormItem>
                     <FormLabel>Image AI Hint</FormLabel>
                     <FormControl>
-                      <Input placeholder="e.g., mountain sunset" {...field} />
+                      <Input placeholder="e.g., company logo" {...field} />
                     </FormControl>
                     <FormDescription>
                       Provide one or two keywords for AI image search if no image is uploaded.
@@ -261,10 +273,10 @@ export default function AddBlogPostPage() {
                 {isSubmitting ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Publishing...
+                    Saving...
                   </>
                 ) : (
-                  "Publish Post"
+                  "Save Changes"
                 )}
               </Button>
             </form>

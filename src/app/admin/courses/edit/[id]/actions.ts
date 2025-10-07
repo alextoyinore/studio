@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import * as z from "zod";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
+import type { Course } from "@/lib/types";
 
 const formSchema = z.object({
   title: z.string().min(3, "Title must be at least 3 characters."),
@@ -17,7 +18,19 @@ const formSchema = z.object({
 
 type CourseFormInput = z.infer<typeof formSchema>;
 
-export async function addCourse(data: CourseFormInput) {
+export async function getCourse(id: string): Promise<Course | null> {
+    const cookieStore = cookies();
+    const supabase = createClient(cookieStore);
+    const { data, error } = await supabase.from('courses').select('*').eq('id', id).single();
+
+    if (error) {
+        console.error("Error fetching course:", error);
+        return null;
+    }
+    return data as Course;
+}
+
+export async function updateCourse(id: string, data: CourseFormInput) {
   const parsedData = formSchema.safeParse(data);
 
   if (!parsedData.success) {
@@ -31,27 +44,25 @@ export async function addCourse(data: CourseFormInput) {
 
   const travelTypeArray = travelType.split(',').map(item => item.trim()).filter(Boolean);
 
-  const { error } = await supabase.from("courses").insert([
-    {
+  const { error } = await supabase.from("courses").update({
       title,
       school_id: schoolId,
       duration,
       description,
       enroll_url: enrollUrl,
       travel_type: travelTypeArray,
-    },
-  ]);
+    }).eq('id', id);
 
   if (error) {
-    console.error("Error saving course:", error);
+    console.error("Error updating course:", error);
     return {
       success: false,
-      message: "There was an error saving the course. Please check the database connection and table structure.",
+      message: "There was an error updating the course.",
     };
   }
 
   revalidatePath("/admin/courses");
-  revalidatePath("/courses");
+  revalidatePath(`/courses/${id}`);
 
-  return { success: true, message: "Course added successfully." };
+  return { success: true, message: "Course updated successfully." };
 }

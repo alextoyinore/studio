@@ -1,8 +1,9 @@
+
 import { createClient } from "@/lib/supabase/server";
 import type { School } from "@/lib/types";
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { PlusCircle } from "lucide-react";
+import { Pencil, PlusCircle } from "lucide-react";
 import Link from "next/link";
 import {
   Table,
@@ -55,7 +56,8 @@ export default async function AdminSchoolsPage() {
                 <TableHead>Name</TableHead>
                 <TableHead>Location</TableHead>
                 <TableHead>Country</TableHead>
-                <TableHead className="text-right">Created At</TableHead>
+                <TableHead>Created At</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -65,14 +67,22 @@ export default async function AdminSchoolsPage() {
                     <TableCell className="font-medium">{school.name}</TableCell>
                     <TableCell>{school.location}</TableCell>
                     <TableCell>{school.country}</TableCell>
-                    <TableCell className="text-right">
+                    <TableCell>
                       {format(new Date(school.created_at), "MMM d, yyyy")}
+                    </TableCell>
+                    <TableCell className="text-right">
+                        <Button asChild variant="ghost" size="icon">
+                            <Link href={`/admin/schools/edit/${school.id}`}>
+                                <Pencil className="h-4 w-4" />
+                                <span className="sr-only">Edit</span>
+                            </Link>
+                        </Button>
                     </TableCell>
                   </TableRow>
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={4} className="h-24 text-center">
+                  <TableCell colSpan={5} className="h-24 text-center">
                     No schools added yet.
                   </TableCell>
                 </TableRow>

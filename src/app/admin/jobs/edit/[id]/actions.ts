@@ -1,9 +1,11 @@
+
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
 import * as z from "zod";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
+import type { Job } from "@/lib/types";
 
 const formSchema = z.object({
   title: z.string().min(3, "Title must be at least 3 characters."),
@@ -20,7 +22,19 @@ const formSchema = z.object({
 
 type JobFormInput = z.infer<typeof formSchema>;
 
-export async function addJob(data: JobFormInput) {
+export async function getJob(id: string): Promise<Job | null> {
+    const cookieStore = cookies();
+    const supabase = createClient(cookieStore);
+    const { data, error } = await supabase.from('jobs').select('*').eq('id', id).single();
+    if (error) {
+        console.error("Error fetching job:", error);
+        return null;
+    }
+    return data as Job;
+}
+
+
+export async function updateJob(id: string, data: JobFormInput) {
   const parsedData = formSchema.safeParse(data);
 
   if (!parsedData.success) {
@@ -35,8 +49,7 @@ export async function addJob(data: JobFormInput) {
   // Convert comma-separated string to array
   const travelTypeArray = travelType.split(',').map(item => item.trim());
 
-  const { error } = await supabase.from("jobs").insert([
-    {
+  const { error } = await supabase.from("jobs").update({
       title,
       company,
       location,
@@ -47,19 +60,18 @@ export async function addJob(data: JobFormInput) {
       image_url: imageUrl,
       image_description: imageDescription,
       image_hint: imageHint,
-    },
-  ]);
+    }).eq('id', id);
 
   if (error) {
-    console.error("Error saving job:", error);
+    console.error("Error updating job:", error);
     return {
       success: false,
-      message: "There was an error saving the job. Please check the database connection and table structure.",
+      message: "There was an error updating the job.",
     };
   }
 
   revalidatePath("/admin/jobs");
-  revalidatePath("/jobs");
+  revalidatePath(`/jobs/${id}`);
 
-  return { success: true, message: "Job posted successfully." };
+  return { success: true, message: "Job updated successfully." };
 }

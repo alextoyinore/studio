@@ -1,4 +1,6 @@
 
+
+
 import { createClient } from "@/lib/supabase/server";
 import type { BlogPost } from "@/lib/types";
 import { BlogCard } from "@/components/BlogCard";
@@ -15,7 +17,7 @@ async function getBlogPosts(): Promise<BlogPost[]> {
     console.error("Error fetching blog posts:", error);
     return [];
   }
-  return data;
+  return data as BlogPost[];
 }
 
 export default async function BlogPage() {
@@ -65,3 +67,5 @@ export default async function BlogPage() {
     </div>
   );
 }
+    
+    

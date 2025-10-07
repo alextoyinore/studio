@@ -1,4 +1,5 @@
 
+
 import type { Course, School } from '@/lib/types';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -19,7 +20,9 @@ export function CourseCard({ course, school }: CourseCardProps) {
   return (
     <Card className="flex flex-col transition-all hover:shadow-lg hover:-translate-y-1">
       <CardHeader>
-        <CardTitle className="font-headline text-xl">{course.title}</CardTitle>
+        <CardTitle className="font-headline text-xl">
+            <Link href={`/courses/${course.id}`}>{course.title}</Link>
+        </CardTitle>
         {schoolName && <CardDescription>{schoolName}</CardDescription>}
       </CardHeader>
       <CardContent className="flex-grow space-y-4">
@@ -33,16 +36,18 @@ export function CourseCard({ course, school }: CourseCardProps) {
           <Clock className="h-4 w-4 mr-2 text-accent" />
           {course.duration}
         </div>
-        <Markdown content={course.description} className="text-sm text-foreground/90" />
+        <div className="text-sm text-foreground/90 line-clamp-3 min-h-[4rem]">
+            <Markdown content={course.description} />
+        </div>
         <div className="flex flex-wrap gap-2">
-            {course.travel_type.map(type => (
+            {Array.isArray(course.travel_type) && course.travel_type.map(type => (
                 <Badge key={type} variant="secondary">{type}</Badge>
             ))}
         </div>
       </CardContent>
       <CardFooter>
         <Button asChild className="w-full bg-accent text-accent-foreground hover:bg-accent/90">
-          <Link href={course.enroll_url}>Enroll Now</Link>
+          <Link href={course.enroll_url} target="_blank">Enroll Now</Link>
         </Button>
       </CardFooter>
     </Card>

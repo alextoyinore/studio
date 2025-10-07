@@ -1,3 +1,7 @@
+
+
+
+
 import type { BlogPost } from '@/lib/types';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import Image from 'next/image';
@@ -11,6 +15,8 @@ type BlogCardProps = {
 };
 
 export function BlogCard({ post }: BlogCardProps) {
+  const authorName = post.author_name || 'Anonymous';
+  
   return (
     <Card className="overflow-hidden flex flex-col group transition-all hover:shadow-lg hover:-translate-y-1">
       <Link href={`/blog/${post.slug}`} className="block">
@@ -35,7 +41,7 @@ export function BlogCard({ post }: BlogCardProps) {
       <CardFooter className="flex justify-between items-center text-xs text-muted-foreground">
         <div className="flex items-center gap-2">
             <UserCircle className="h-4 w-4" />
-            <span>{post.author}</span>
+            <span>{authorName}</span>
         </div>
         <div className="flex items-center gap-2">
             <Clock className="h-4 w-4" />
@@ -45,3 +51,5 @@ export function BlogCard({ post }: BlogCardProps) {
     </Card>
   );
 }
+
+    
