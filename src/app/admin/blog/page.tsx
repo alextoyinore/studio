@@ -1,12 +1,9 @@
 
-
-
-
 import { createClient } from "@/lib/supabase/server";
 import type { BlogPost } from "@/lib/types";
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { PlusCircle } from "lucide-react";
+import { Pencil, PlusCircle } from "lucide-react";
 import Link from "next/link";
 import {
   Table,
@@ -60,7 +57,8 @@ export default async function AdminBlogPage() {
                 <TableHead>Title</TableHead>
                 <TableHead>Author</TableHead>
                 <TableHead>Category</TableHead>
-                <TableHead className="text-right">Created At</TableHead>
+                <TableHead>Created At</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -70,14 +68,22 @@ export default async function AdminBlogPage() {
                     <TableCell className="font-medium">{post.title}</TableCell>
                     <TableCell>{post.author_name || 'N/A'}</TableCell>
                     <TableCell>{post.category}</TableCell>
-                    <TableCell className="text-right">
+                    <TableCell>
                       {format(new Date(post.created_at), "MMM d, yyyy")}
+                    </TableCell>
+                     <TableCell className="text-right">
+                        <Button asChild variant="ghost" size="icon">
+                            <Link href={`/admin/blog/edit/${post.id}`}>
+                                <Pencil className="h-4 w-4" />
+                                <span className="sr-only">Edit</span>
+                            </Link>
+                        </Button>
                     </TableCell>
                   </TableRow>
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={4} className="h-24 text-center">
+                  <TableCell colSpan={5} className="h-24 text-center">
                     No posts added yet.
                   </TableCell>
                 </TableRow>

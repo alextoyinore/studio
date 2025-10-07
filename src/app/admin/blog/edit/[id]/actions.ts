@@ -1,0 +1,79 @@
+
+"use server";
+
+import { createClient } from "@/lib/supabase/server";
+import * as z from "zod";
+import { revalidatePath } from "next/cache";
+import { cookies } from "next/headers";
+import type { BlogPost } from "@/lib/types";
+
+const formSchema = z.object({
+  title: z.string().min(5, "Title must be at least 5 characters."),
+  content: z.string().min(20, "Content must be at least 20 characters."),
+  imageUrl: z.string().min(1, "Please upload an image."),
+  imageDescription: z.string().optional(),
+  imageHint: z.string().optional(),
+  excerpt: z.string().min(10, "Excerpt must be at least 10 characters.").max(300, "Excerpt cannot exceed 300 characters."),
+  category: z.string().min(3, "Please select a category."),
+  tags: z.string().optional(),
+  authorName: z.string().min(1, "Author name is required."),
+});
+
+type BlogPostFormInput = z.infer<typeof formSchema>;
+
+export async function getBlogPost(id: string): Promise<BlogPost | null> {
+    const cookieStore = cookies();
+    const supabase = createClient(cookieStore);
+    const { data, error } = await supabase.from('blog_posts').select('*').eq('id', id).single();
+    if (error) {
+        console.error("Error fetching blog post:", error);
+        return null;
+    }
+    return data as BlogPost;
+}
+
+
+export async function updateBlogPost(id: string, data: BlogPostFormInput) {
+  const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
+
+  const parsedData = formSchema.safeParse(data);
+
+  if (!parsedData.success) {
+    return { success: false, message: "Invalid data provided." };
+  }
+
+  const { title, content, imageUrl, imageDescription, imageHint, excerpt, category, tags, authorName } = parsedData.data;
+
+  // Create a slug from the title
+  const slug = title.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '');
+  const tagsArray = tags?.split(',').map(tag => tag.trim()).filter(Boolean) || [];
+
+  const postData = {
+      title,
+      slug,
+      content,
+      author_name: authorName,
+      image_url: imageUrl,
+      image_description: imageDescription,
+      image_hint: imageHint,
+      excerpt,
+      category,
+      tags: tagsArray,
+  };
+
+  const { error } = await supabase.from("blog_posts").update(postData).eq('id', id);
+
+  if (error) {
+    console.error("Error updating blog post:", error);
+    return {
+      success: false,
+      message: "There was an error updating the post.",
+    };
+  }
+
+  revalidatePath("/admin/blog");
+  revalidatePath(`/blog/${slug}`);
+
+  return { success: true, message: "Blog post updated successfully." };
+}
