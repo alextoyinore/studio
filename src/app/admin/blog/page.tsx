@@ -14,6 +14,7 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import { format } from "date-fns";
+import { DeleteBlogPostButton } from "@/components/admin/blog/DeleteBlogPostButton";
 
 async function getBlogPosts(): Promise<BlogPost[]> {
     const supabase = createClient();
@@ -78,6 +79,7 @@ export default async function AdminBlogPage() {
                                 <span className="sr-only">Edit</span>
                             </Link>
                         </Button>
+                        <DeleteBlogPostButton postId={post.id} />
                     </TableCell>
                   </TableRow>
                 ))

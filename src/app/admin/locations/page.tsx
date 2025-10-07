@@ -14,6 +14,7 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import { format } from "date-fns";
+import { DeleteLocationButton } from "@/components/admin/locations/DeleteLocationButton";
 
 async function getLocations(): Promise<Location[]> {
   const supabase = createClient();
@@ -74,6 +75,7 @@ export default async function AdminLocationsPage() {
                                 <span className="sr-only">Edit</span>
                             </Link>
                         </Button>
+                        <DeleteLocationButton locationId={location.id} />
                     </TableCell>
                   </TableRow>
                 ))
