@@ -55,3 +55,20 @@ export async function addCourse(data: CourseFormInput) {
 
   return { success: true, message: "Course added successfully." };
 }
+
+export async function deleteCourse(id: string) {
+    const cookieStore = cookies();
+    const supabase = createClient(cookieStore);
+
+    const { error } = await supabase.from('courses').delete().eq('id', id);
+
+    if (error) {
+        console.error("Error deleting course:", error);
+        return { success: false, message: "There was an error deleting the course." };
+    }
+
+    revalidatePath("/admin/courses");
+    revalidatePath("/courses");
+
+    return { success: true, message: "Course deleted successfully." };
+}

@@ -14,6 +14,7 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import { format } from "date-fns";
+import { DeleteSchoolButton } from "@/components/admin/schools/DeleteSchoolButton";
 
 async function getSchools(): Promise<School[]> {
   const supabase = createClient();
@@ -77,6 +78,7 @@ export default async function AdminSchoolsPage() {
                                 <span className="sr-only">Edit</span>
                             </Link>
                         </Button>
+                        <DeleteSchoolButton schoolId={school.id} />
                     </TableCell>
                   </TableRow>
                 ))

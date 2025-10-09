@@ -1,3 +1,4 @@
+
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
@@ -55,4 +56,22 @@ export async function addLocation(data: LocationFormInput) {
   revalidatePath("/destinations"); // Also revalidate public destinations page if it uses this data
 
   return { success: true, message: "Location added successfully." };
+}
+
+export async function deleteLocation(id: string) {
+    const cookieStore = cookies();
+    const supabase = createClient(cookieStore);
+
+    const { error } = await supabase.from('locations').delete().eq('id', id);
+
+    if (error) {
+        console.error("Error deleting location:", error);
+        return { success: false, message: "There was an error deleting the location." };
+    }
+
+    revalidatePath("/admin/locations");
+    revalidatePath("/locations");
+    revalidatePath("/");
+
+    return { success: true, message: "Location deleted successfully." };
 }

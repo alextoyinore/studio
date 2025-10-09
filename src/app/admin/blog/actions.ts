@@ -66,3 +66,21 @@ export async function addBlogPost(data: BlogPostFormInput) {
 
   return { success: true, message: "Blog post created successfully." };
 }
+
+export async function deleteBlogPost(id: string) {
+    const cookieStore = cookies();
+    const supabase = createClient(cookieStore);
+
+    const { error } = await supabase.from('blog_posts').delete().eq('id', id);
+
+    if (error) {
+        console.error("Error deleting blog post:", error);
+        return { success: false, message: "There was an error deleting the post." };
+    }
+
+    revalidatePath("/admin/blog");
+    revalidatePath("/blog");
+    revalidatePath("/");
+
+    return { success: true, message: "Blog post deleted successfully." };
+}

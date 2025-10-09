@@ -14,6 +14,7 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import { format } from "date-fns";
+import { DeleteCourseButton } from "@/components/admin/courses/DeleteCourseButton";
 
 type CourseWithSchool = Course & {
     school: { name: string } | null;
@@ -80,6 +81,7 @@ export default async function AdminCoursesPage() {
                                 <span className="sr-only">Edit</span>
                             </Link>
                         </Button>
+                        <DeleteCourseButton courseId={course.id} />
                     </TableCell>
                   </TableRow>
                 ))

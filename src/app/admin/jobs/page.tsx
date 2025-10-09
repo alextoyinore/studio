@@ -14,6 +14,7 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import { format } from "date-fns";
+import { DeleteJobButton } from "@/components/admin/jobs/DeleteJobButton";
 
 async function getJobs(): Promise<Job[]> {
   const supabase = createClient();
@@ -76,6 +77,7 @@ export default async function AdminJobsPage() {
                                 <span className="sr-only">Edit</span>
                             </Link>
                         </Button>
+                        <DeleteJobButton jobId={job.id} />
                     </TableCell>
                   </TableRow>
                 ))
